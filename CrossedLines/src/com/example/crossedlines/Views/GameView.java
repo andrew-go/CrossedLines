@@ -13,6 +13,9 @@ public class GameView extends View {
 
 	Paint paint;
 	
+	int movePixelsX;
+	int movePixelsY;
+	
 	public GameView(Context context) {
 		super(context);
 		initComponents();

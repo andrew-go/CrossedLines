@@ -11,8 +11,8 @@ public class GameSettings {
 	public int height;
 	public int width;
 	
-	public int rectSize = width/8;
-	
+	public int rectsCount = 8;
+	public int rectSize = width/rectsCount;
 	public int rectPoint = 0;
 
 }
