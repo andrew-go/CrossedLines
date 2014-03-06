@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
 
 			        touchActionDownX = (int)event.getX();
 			        touchActionDownY = (int)event.getY();
+			    	Game.Instance().startX = (int)event.getX();
+			    	Game.Instance().startY = (int)event.getY();
 			        touchActionMoveStatus = true;
 			        Game.Instance().clearPreviousInfo();
 			        Game.Instance().selectStartRect(event.getX(), event.getY());
@@ -60,13 +62,18 @@ public class MainActivity extends Activity {
 
 			    case MotionEvent.ACTION_MOVE:
 			    	
+			    	Game.Instance().currentX = (int)event.getX();
+			    	Game.Instance().currentY = (int)event.getY();
+			    	
 			        if(touchActionMoveStatus) {
-			        	touchActionMoveX = (int)event.getX();
-			        	touchActionMoveY = (int)event.getY();
+			        	touchActionMoveX = (int) event.getX();
+			        	touchActionMoveY = (int) event.getY();
 			        	Game.Instance().setWay(touchActionDownX, touchActionDownY, touchActionMoveX, touchActionMoveY);
-			        	if (Game.Instance().way == null)
+			        	if (Game.Instance().way != null) {
 			        		showWay();
+			        	}
 			        }
+		        	gameView.postInvalidate();
 			        break;
 			    }
 

@@ -4,7 +4,13 @@ import java.util.Random;
 
 public class Game {
 	
-	int threshold = 10;
+	int thresHold = 10;
+	
+	public float startX;
+	public float startY;
+	
+	public float currentX;
+	public float currentY;
 	
 	public enum Way {UP, DOWN, LEFT, RIGHT}
 	public Way way;	
@@ -29,16 +35,16 @@ public class Game {
 	}
 	
 	public void setWay(float firstX, float firstY, float secondX, float secondY) {
-		if((secondX < (firstX - threshold) && (secondY > (firstY - threshold)) && (secondY < (firstY + threshold)))) {
+		if((secondX < (firstX - thresHold) && (secondY > (firstY - thresHold)) && (secondY < (firstY + thresHold)))) {
 			Game.Instance().way = Way.LEFT;
 		}
-        else if((secondX > (firstX + threshold) && (secondY > (firstY - threshold)) && (secondY < (firstY + threshold)))) {
+        else if((secondX > (firstX + thresHold) && (secondY > (firstY - thresHold)) && (secondY < (firstY + thresHold)))) {
             Game.Instance().way = Way.RIGHT;
         }
-        else if((secondY < (firstY - threshold) && (secondX > (firstX - threshold)) && (secondX < (firstX + threshold)))) {
+        else if((secondY < (firstY - thresHold) && (secondX > (firstX - thresHold)) && (secondX < (firstX + thresHold)))) {
             Game.Instance().way = Way.UP;
         }
-        else if((secondY > (firstY + threshold) && (secondX > (firstX - threshold)) && (secondX < (firstX + threshold)))) {
+        else if((secondY > (firstY + thresHold) && (secondX > (firstX - thresHold)) && (secondX < (firstX + thresHold)))) {
             Game.Instance().way = Way.DOWN;
         }
 
@@ -50,7 +56,15 @@ public class Game {
 	}
 	
 	public void selectStartRect(float x, float y) {
-		Game.Instance().selecetedRect = new SelectedRect((int)x/GameSettings.Instance().width/GameSettings.Instance().rectsCount, (int)y/GameSettings.Instance().width/GameSettings.Instance().rectsCount);
+		Game.Instance().selecetedRect = new SelectedRect((int)(x/(GameSettings.Instance().width/GameSettings.Instance().rectsCount)), (int)(y/(GameSettings.Instance().width/GameSettings.Instance().rectsCount)));
+	}
+	
+	public float getXDiffer() {
+		return Math.abs(startX - currentX);
+	}
+	
+	public float getYDiffer() {
+		return Math.abs(startY - currentY);
 	}
 	
 	public static class SelectedRect {		

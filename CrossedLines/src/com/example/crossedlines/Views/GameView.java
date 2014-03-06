@@ -7,14 +7,12 @@ import android.graphics.Paint;
 import android.view.View;
 
 import com.example.crossedlines.Game;
+import com.example.crossedlines.Game.Way;
 import com.example.crossedlines.R;
 
 public class GameView extends View {
 
 	Paint paint;
-	
-	int movePixelsX;
-	int movePixelsY;
 	
 	public GameView(Context context) {
 		super(context);
@@ -28,7 +26,16 @@ public class GameView extends View {
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++) {
 				paint.setColor(getColor(Game.Instance().gameArr[i][j]));
-				canvas.drawRect((i * 60) + 2, (j * 60) + 2, (i * 60) - 2 + 60, (j * 60) - 2 + 60, paint);				
+				if (Game.Instance().way != null && (Game.Instance().way == Way.LEFT || Game.Instance().way == Way.RIGHT) && Game.Instance().selecetedRect.getX() == j) {
+					canvas.drawRect((i * 60) + 2 + Game.Instance().getXDiffer(), (j * 60) + 2, (i * 60) - 2 + 60 + Game.Instance().getXDiffer(), (j * 60) - 2 + 60, paint);
+				}
+				else if (Game.Instance().way != null && (Game.Instance().way == Way.UP || Game.Instance().way == Way.DOWN) && Game.Instance().selecetedRect.getY() == i) {
+					canvas.drawRect((i * 60) + 2, (j * 60) + 2 + Game.Instance().getYDiffer(), (i * 60) - 2 + 60, (j * 60) - 2 + 60 + Game.Instance().getYDiffer(), paint);
+				}
+				else {
+					paint.setColor(getColor(Game.Instance().gameArr[i][j]));
+					canvas.drawRect((i * 60) + 2, (j * 60) + 2, (i * 60) - 2 + 60, (j * 60) - 2 + 60, paint);	
+				}		
 			}
 		//canvas.drawRect(0, 0, 60, 60, paint);	
 				
