@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.view.View;
 
 import com.example.crossedlines.Game;
-import com.example.crossedlines.Game.Way;
 import com.example.crossedlines.GameSettings;
 import com.example.crossedlines.R;
 
@@ -106,8 +105,6 @@ public class GameView extends View {
 				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
 						paint);
 			}
-//			if (Game.Instance().selecetedRect.columnIndex == columnIndex && Game.Instance().selecetedRect.rowIndex == rowIndex)
-//				moveLineInArr(rowIndex, columnIndex, leftPoint, topPoint, rightPoint, bottomPoint);
 		} else if (Game.Instance().isColumnMovingVertical(columnIndex)) {
 			if (topPoint < GameSettings.Instance().rectVerticalStartPoint) {
 				canvas.drawRect(leftPoint, topPoint

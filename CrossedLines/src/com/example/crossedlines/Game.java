@@ -106,43 +106,81 @@ public class Game {
 	}
 
 	public void pickUpArr(MotionEvent event) {
-		int[][] arr = new int[GameSettings.Instance().rectsCount][GameSettings
-				.Instance().rectsCount];
 		int currentRowIndex = (int) (event.getY() / (GameSettings.Instance().width / GameSettings
 				.Instance().rectsCount));
 		int currentColumnIndex = (int) (event.getX() / (GameSettings.Instance().width / GameSettings
 				.Instance().rectsCount));
-
+		if (way == Way.RIGHT) {
+			for (int i = 0; i < (currentColumnIndex - selecetedRect.columnIndex); i++)
+				changeRowRight();
+		}
+		if (way == Way.LEFT) {
+			for (int i = 0; i < (selecetedRect.columnIndex - currentColumnIndex); i++)
+				changeRowLeft();
+		}
+		if (way == Way.UP) {
+			for (int i = 0; i < (selecetedRect.rowIndex - currentRowIndex); i++)
+				changeColumnUp();
+		}
+		if (way == Way.DOWN) {
+			for (int i = 0; i < (currentRowIndex - selecetedRect.rowIndex); i++)
+				changeColumnDown();
+		}
+		selecetedRect.rowIndex++;
 	}
 
-	private void changeRow() {
+	private void changeRowRight() {
 		int prev = -1;
 		int next = -1;
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i++) {
-			if (i == GameSettings.Instance().rectsCount - 1) {
-				gameArr[selecetedRect.columnIndex][0] = gameArr[selecetedRect.columnIndex][i];
-			}
-			else { 
-				prev = next;
-				next = gameArr[selecetedRect.columnIndex][i];
-			}
-			gameArr[selecetedRect.columnIndex][i] = prev; 
-		}
+			prev = next;
+			if (i == GameSettings.Instance().rectsCount - 1)
+				gameArr[selecetedRect.rowIndex][0] = gameArr[selecetedRect.rowIndex][i];
+			else				
+				next = gameArr[selecetedRect.rowIndex][i];
+			gameArr[selecetedRect.rowIndex][i] = prev; 
+		}		
 	}
 	
-	private void changeColumn() {
+	private void changeRowLeft() {
+		int prev = -1;
+		int next = -1;
+		for (int i = GameSettings.Instance().rectsCount - 1; i >= 0; i--) {
+			prev = next;
+			if (i == 0)
+				gameArr[selecetedRect.rowIndex][GameSettings.Instance().rectsCount - 1] = gameArr[selecetedRect.rowIndex][i];
+			else				
+				next = gameArr[selecetedRect.rowIndex][i];
+			gameArr[selecetedRect.rowIndex][i] = prev; 
+		}		
+	}
+	
+	private void changeColumnDown() {
 		int prev = -1;
 		int next = -1;
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i++) {
-			if (i == GameSettings.Instance().rectsCount - 1) {
-				gameArr[i][selecetedRect.columnIndex] = gameArr[i][selecetedRect.columnIndex];
-			}
-			else { 
-				prev = next;
+			prev = next;
+			if (i == GameSettings.Instance().rectsCount - 1)
+				gameArr[0][selecetedRect.columnIndex] = gameArr[i][selecetedRect.columnIndex];
+			else
 				next = gameArr[i][selecetedRect.columnIndex];
-			}
 			gameArr[i][selecetedRect.columnIndex] = prev; 
-		}			
+		}
+		
+	}
+	
+	private void changeColumnUp() {
+		int prev = -1;
+		int next = -1;
+		for (int i = GameSettings.Instance().rectsCount - 1; i >= 0; i--) {
+			prev = next;
+			if (i == 0)
+				gameArr[GameSettings.Instance().rectsCount - 1][selecetedRect.columnIndex] = gameArr[i][selecetedRect.columnIndex];
+			else
+				next = gameArr[i][selecetedRect.columnIndex];
+			gameArr[i][selecetedRect.columnIndex] = prev; 
+		}
+		
 	}
 
 	public static class SelectedRect {
