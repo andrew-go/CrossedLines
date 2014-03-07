@@ -2,6 +2,7 @@ package com.example.crossedlines.Views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
@@ -23,12 +24,12 @@ public class GameView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < GameSettings.Instance().rectsCount; i++)
+			for (int j = 0; j < GameSettings.Instance().rectsCount; j++) {
 				paint.setColor(getColor(Game.Instance().gameArr[i][j]));
-				if (isMoovingHorizontal(i)) {
+				if (Game.Instance().isRowMovingHorizontal(i)) {
 					drawHorizontalRect(i, j, canvas);
-				} else if (isMoovingVertical(j)) {
+				} else if (Game.Instance().isColumnMovingVertical(j)) {
 					drawVerticalRect(i, j, canvas);
 				} else {
 					drawRect(i, j, canvas);
@@ -37,67 +38,96 @@ public class GameView extends View {
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
-		canvas.drawRect((columnIndex * 60) + 2, (rowIndex * 60) + 2,
-				(columnIndex * 60) - 2 + 60, (rowIndex * 60) - 2 + 60, paint);
+		canvas.drawRect((columnIndex * GameSettings.Instance().getRectSize())
+				+ GameSettings.Instance().marginRect,
+				(rowIndex * GameSettings.Instance().getRectSize())
+						+ GameSettings.Instance().marginRect,
+				(columnIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize(),
+				(rowIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize(), paint);
 	}
 
 	private void drawHorizontalRect(int rowIndex, int columnIndex, Canvas canvas) {
-		keepOnScreen(
-				rowIndex,
-				columnIndex,
-				(columnIndex * 60) + 2 + Game.Instance().getXDiffer() * -1,
-				(rowIndex * 60) + 2,
-				(columnIndex * 60) - 2 + 60 + Game.Instance().getXDiffer() * -1,
-				(rowIndex * 60) - 2 + 60, canvas);
-		canvas.drawRect((columnIndex * 60) + 2 + Game.Instance().getXDiffer()
-				* -1, (rowIndex * 60) + 2, (columnIndex * 60) - 2 + 60
-				+ Game.Instance().getXDiffer() * -1, (rowIndex * 60) - 2 + 60,
-				paint);
+		keepOnScreen(rowIndex, columnIndex, (columnIndex * GameSettings
+				.Instance().getRectSize())
+				+ GameSettings.Instance().marginRect
+				+ Game.Instance().getXDiffer() * -1,
+				(rowIndex * GameSettings.Instance().getRectSize())
+						+ GameSettings.Instance().marginRect,
+				(columnIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize()
+						+ Game.Instance().getXDiffer() * -1,
+				(rowIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize(), canvas);
 	}
 
 	private void drawVerticalRect(int rowIndex, int columnIndex, Canvas canvas) {
-		keepOnScreen(rowIndex, columnIndex, (columnIndex * 60) + 2,
-				(rowIndex * 60) + 2 + Game.Instance().getYDiffer() * -1,
-				(columnIndex * 60) - 2 + 60, (rowIndex * 60) - 2 + 60
+		keepOnScreen(rowIndex, columnIndex,
+				(columnIndex * GameSettings.Instance().getRectSize())
+						+ GameSettings.Instance().marginRect,
+				(rowIndex * GameSettings.Instance().getRectSize())
+						+ GameSettings.Instance().marginRect
+						+ Game.Instance().getYDiffer() * -1,
+				(columnIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize(),
+				(rowIndex * GameSettings.Instance().getRectSize())
+						- GameSettings.Instance().marginRect
+						+ GameSettings.Instance().getRectSize()
 						+ Game.Instance().getYDiffer() * -1, canvas);
-		canvas.drawRect((columnIndex * 60) + 2, (rowIndex * 60) + 2
-				+ Game.Instance().getYDiffer() * -1,
-				(columnIndex * 60) - 2 + 60, (rowIndex * 60) - 2 + 60
-						+ Game.Instance().getYDiffer() * -1, paint);
 	}
 
-	private boolean isMoovingHorizontal(int rowIndex) {
-		return Game.Instance().way != null
-				&& (Game.Instance().way == Way.LEFT || Game.Instance().way == Way.RIGHT)
-				&& Game.Instance().selecetedRect.getY() == rowIndex;
-	}
 
-	private boolean isMoovingVertical(int columnIndex) {
-		return Game.Instance().way != null
-				&& (Game.Instance().way == Way.UP || Game.Instance().way == Way.DOWN)
-				&& Game.Instance().selecetedRect.getX() == columnIndex;
-	}
 
 	private void keepOnScreen(int rowIndex, int columnIndex, float leftPoint,
 			float topPoint, float rightPoint, float bottomPoint, Canvas canvas) {
-		if (isMoovingHorizontal(rowIndex)) {
-			if (rightPoint > GameSettings.Instance().width)
+		if (Game.Instance().isRowMovingHorizontal(rowIndex)) {
+			if (rightPoint > GameSettings.Instance().width) {
 				canvas.drawRect(leftPoint - GameSettings.Instance().width,
 						topPoint, rightPoint - GameSettings.Instance().width,
 						bottomPoint, paint);
-			else if (leftPoint < 0)
+				if (leftPoint < GameSettings.Instance().width)
+					canvas.drawRect(leftPoint, topPoint,
+							GameSettings.Instance().width, bottomPoint, paint);
+			} else if (leftPoint < GameSettings.Instance().rectHorizontalStartPoint) {
 				canvas.drawRect(leftPoint + GameSettings.Instance().width,
 						topPoint, rightPoint + GameSettings.Instance().width,
 						bottomPoint, paint);
-		} else if (isMoovingVertical(columnIndex)) {
-			if (topPoint < 0)
+				if (rightPoint > GameSettings.Instance().rectHorizontalStartPoint)
+					canvas.drawRect(
+							GameSettings.Instance().rectHorizontalStartPoint,
+							topPoint, rightPoint, bottomPoint, paint);
+			} else {
+				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
+						paint);
+			}
+//			if (Game.Instance().selecetedRect.columnIndex == columnIndex && Game.Instance().selecetedRect.rowIndex == rowIndex)
+//				moveLineInArr(rowIndex, columnIndex, leftPoint, topPoint, rightPoint, bottomPoint);
+		} else if (Game.Instance().isColumnMovingVertical(columnIndex)) {
+			if (topPoint < GameSettings.Instance().rectVerticalStartPoint) {
 				canvas.drawRect(leftPoint, topPoint
 						+ GameSettings.Instance().width, rightPoint,
 						bottomPoint + GameSettings.Instance().width, paint);
-			else if (bottomPoint > GameSettings.Instance().width)
+				if (bottomPoint > GameSettings.Instance().rectVerticalStartPoint)
+					canvas.drawRect(leftPoint,
+							GameSettings.Instance().rectVerticalStartPoint,
+							rightPoint, bottomPoint, paint);
+			} else if (bottomPoint > GameSettings.Instance().width) {
 				canvas.drawRect(leftPoint, topPoint
 						- GameSettings.Instance().width, rightPoint,
 						bottomPoint - GameSettings.Instance().width, paint);
+				if (topPoint < GameSettings.Instance().width)
+					canvas.drawRect(leftPoint, topPoint, rightPoint,
+							GameSettings.Instance().width, paint);
+			} else {
+				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
+						paint);
+			}
 		}
 	}
 
@@ -108,20 +138,19 @@ public class GameView extends View {
 	private int getColor(int colorNumber) {
 		switch (colorNumber) {
 		case 0:
-			return getResources().getColor(R.color.color_0);
+			return getResources().getColor(R.color.color_brown);
 		case 1:
-			return getResources().getColor(R.color.color_1);
+			return getResources().getColor(R.color.color_orange);
 		case 2:
-			return getResources().getColor(R.color.color_2);
+			return getResources().getColor(R.color.color_green);
 		case 3:
-			return getResources().getColor(R.color.color_3);
+			return getResources().getColor(R.color.color_ivory);
 		case 4:
-			return getResources().getColor(R.color.color_4);
+			return getResources().getColor(R.color.color_blue);
 		case 5:
-			return getResources().getColor(R.color.color_5);
+			return getResources().getColor(R.color.color_purple);
 		}
-		return -1;
-		// return Color.RED;
+		return Color.WHITE;
 	}
 
 }

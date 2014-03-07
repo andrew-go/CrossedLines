@@ -12,7 +12,16 @@ public class GameSettings {
 	public int width;
 
 	public int rectsCount = 8;
-	public int rectSize = width/rectsCount;
-	public int rectPoint = 0;
+
+	public int rectHorizontalStartPoint = 0;
+	public int rectVerticalStartPoint = 0;
+	
+	public int colorsCount = 5;
+	
+	public int marginRect = 2;
+	
+	public int getRectSize() {
+		return 	width/rectsCount;
+	}
 
 }

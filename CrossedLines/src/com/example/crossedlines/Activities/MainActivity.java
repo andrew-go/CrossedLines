@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 	float touchActionDownX;
 	float touchActionDownY;
 
-	boolean touchActionMoveStatus;
 	float touchActionMoveX;
 	float touchActionMoveY;
 	Toast toast;
@@ -38,35 +37,39 @@ public class MainActivity extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!isOnGameView(event))
-					return false;
+
 				switch (event.getAction()) {
 
 				case MotionEvent.ACTION_DOWN:
+					if (!isOnGameView(event))
+						return false;
 					Log.i("test", "Down");
 
 					touchActionDownX = (int) event.getX();
 					touchActionDownY = (int) event.getY();
 					Game.Instance().startX = (int) event.getX();
 					Game.Instance().startY = (int) event.getY();
-					touchActionMoveStatus = true;
+					Game.Instance().touchActionMoveStatus = true;
 					Game.Instance().clearPreviousInfo();
 					Game.Instance().selectStartRect(event.getX(), event.getY());
 					break;
 
 				case MotionEvent.ACTION_UP:
 
-					touchActionMoveStatus = false;
+					Game.Instance().touchActionMoveStatus = true;
+					Game.Instance().pickUpArr(event);
 					Game.Instance().clearPreviousInfo();
 					gameView.postInvalidate();
 					break;
 
 				case MotionEvent.ACTION_MOVE:
+					if (!isOnGameView(event))
+						return false;
 
 					Game.Instance().currentX = (int) event.getX();
 					Game.Instance().currentY = (int) event.getY();
 
-					if (touchActionMoveStatus) {
+					if (Game.Instance().touchActionMoveStatus) {
 						touchActionMoveX = (int) event.getX();
 						touchActionMoveY = (int) event.getY();
 						Game.Instance().setWay(touchActionDownX,
