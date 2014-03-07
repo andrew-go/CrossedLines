@@ -34,10 +34,10 @@ public class Game {
 	}
 
 	public Game() {
-		createArray();
+		initArray();
 	}
 
-	private void createArray() {
+	public void initArray() {
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j++)
 				gameArr[i][j] = random

@@ -8,10 +8,10 @@ public class GameSettings {
 		return instance == null ? instance = new GameSettings() : instance;
 	}
 
-	public int height;
-	public int width;
+	public int height = 800;
+	public int width = 480;
 
-	public int rectsCount = 8;
+	public int rectsCount = 4/*8*/;
 
 	public int rectHorizontalStartPoint = 0;
 	public int rectVerticalStartPoint = 0;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -91,12 +92,19 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		Game.Instance().initArray();
+		gameView.postInvalidate();
+		return super.onMenuItemSelected(featureId, item);				
+	}
 
 	private void setGameSettings() {
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		GameSettings.Instance().height = displaymetrics.heightPixels;
-		GameSettings.Instance().width = displaymetrics.widthPixels;
+//		GameSettings.Instance().height = displaymetrics.heightPixels;
+//		GameSettings.Instance().width = displaymetrics.widthPixels;
 	}
 
 	private boolean isOnGameView(MotionEvent event) {

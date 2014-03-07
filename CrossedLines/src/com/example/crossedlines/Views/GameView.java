@@ -37,51 +37,61 @@ public class GameView extends View {
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
-		canvas.drawRect((columnIndex * GameSettings.Instance().getRectSize())
+		canvas.drawRect(GameSettings.Instance().rectHorizontalStartPoint
+				+ (columnIndex * GameSettings.Instance().getRectSize())
 				+ GameSettings.Instance().marginRect,
-				(rowIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						+ GameSettings.Instance().marginRect,
-				(columnIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectHorizontalStartPoint
+						+ (columnIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize(),
-				(rowIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize(), paint);
 	}
 
 	private void drawHorizontalRect(int rowIndex, int columnIndex, Canvas canvas) {
-		keepOnScreen(rowIndex, columnIndex, (columnIndex * GameSettings
-				.Instance().getRectSize())
-				+ GameSettings.Instance().marginRect
-				+ Game.Instance().getXDiffer() * -1,
-				(rowIndex * GameSettings.Instance().getRectSize())
+		keepOnScreen(rowIndex, columnIndex,
+				GameSettings.Instance().rectHorizontalStartPoint
+						+ (columnIndex * GameSettings.Instance().getRectSize())
+						+ GameSettings.Instance().marginRect
+						+ Game.Instance().getXDiffer() * -1,
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						+ GameSettings.Instance().marginRect,
-				(columnIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectHorizontalStartPoint
+						+ (columnIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize()
 						+ Game.Instance().getXDiffer() * -1,
-				(rowIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize(), canvas);
 	}
 
 	private void drawVerticalRect(int rowIndex, int columnIndex, Canvas canvas) {
 		keepOnScreen(rowIndex, columnIndex,
-				(columnIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectHorizontalStartPoint
+						+ (columnIndex * GameSettings.Instance().getRectSize())
 						+ GameSettings.Instance().marginRect,
-				(rowIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						+ GameSettings.Instance().marginRect
 						+ Game.Instance().getYDiffer() * -1,
-				(columnIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectHorizontalStartPoint
+						+ (columnIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize(),
-				(rowIndex * GameSettings.Instance().getRectSize())
+				GameSettings.Instance().rectVerticalStartPoint
+						+ (rowIndex * GameSettings.Instance().getRectSize())
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize()
 						+ Game.Instance().getYDiffer() * -1, canvas);
 	}
-
-
 
 	private void keepOnScreen(int rowIndex, int columnIndex, float leftPoint,
 			float topPoint, float rightPoint, float bottomPoint, Canvas canvas) {
@@ -109,7 +119,7 @@ public class GameView extends View {
 			if (topPoint < GameSettings.Instance().rectVerticalStartPoint) {
 				canvas.drawRect(leftPoint, topPoint
 						+ GameSettings.Instance().width, rightPoint,
-						bottomPoint + GameSettings.Instance().width, paint);
+						keepBottomPointOnScreen(bottomPoint), paint);
 				if (bottomPoint > GameSettings.Instance().rectVerticalStartPoint)
 					canvas.drawRect(leftPoint,
 							GameSettings.Instance().rectVerticalStartPoint,
@@ -126,6 +136,12 @@ public class GameView extends View {
 						paint);
 			}
 		}
+	}
+
+	private float keepBottomPointOnScreen(float bottomPoint) {
+		return bottomPoint + GameSettings.Instance().width > GameSettings
+				.Instance().width ? GameSettings.Instance().width : bottomPoint
+				+ GameSettings.Instance().width;
 	}
 
 	private void initComponents() {
