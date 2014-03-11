@@ -11,15 +11,17 @@ public class GameSettings {
 	public int height = 800;
 	public int width = 480;
 
-	public int rectsCount = 4/*8*/;
+	public int rectsCount = 6;
 
 	public int rectHorizontalStartPoint = 0;
-	public int rectVerticalStartPoint = 0;
-	
+	public int rectVerticalStartPoint = 100;
+
 	public int colorsCount = 5;
-	
+
 	public int marginRect = 2;
 	
+	public int time = 60;
+
 	public int getRectSize() {
 		return 	width/rectsCount;
 	}
