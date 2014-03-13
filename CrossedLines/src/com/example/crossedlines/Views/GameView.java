@@ -36,193 +36,222 @@ public class GameView extends View {
 					drawRect(i, j, canvas);
 				}
 			}
-		if (!Game.Instance().isGameOver) {
-		   	Paint paint2 = new Paint();
-		   	Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
-		    paint2.setTypeface(tf);
-		    paint2.setColor(Color.WHITE);
-		    paint2.setTextSize(60);
-		    paint2.setAntiAlias(true);
-		    paint2.setTextAlign(Align.RIGHT);
-		    canvas.drawText(String.format("%d / %d", Game.Instance().score, GameSettings.Instance().time), GameSettings.Instance().width - GameSettings.Instance().marginRect, 70, paint2);
-//		    canvas.drawText(String.format("Time: %d", GameSettings.Instance().time), 0, 20, paint2);
-		}
-		else {
-		   	Paint paint2 = new Paint();
-		    paint2.setColor(Color.BLACK);
-		   	Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
-		    paint2.setTypeface(tf);
-		    paint2.setTextSize(180);
-		    paint2.setAntiAlias(true);
-		    paint2.setTextAlign(Align.CENTER);
-
-		    canvas.drawText("Game", GameSettings.Instance().width / 2, 325, paint2);
-		    canvas.drawText("Over", GameSettings.Instance().width / 2, 485, paint2);
-		}
+		if (!Game.Instance().isGameOver)
+			drawInfoPanel(canvas);
+		else
+			drawGameOver(canvas);
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
-		canvas.drawRect(GameSettings.Instance().rectHorizontalStartPoint
-				+ (columnIndex * GameSettings.Instance().getRectSize())
-				+ GameSettings.Instance().marginRect,
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
-						+ GameSettings.Instance().marginRect,
-				GameSettings.Instance().rectHorizontalStartPoint
-						+ (columnIndex * GameSettings.Instance().getRectSize())
-						- GameSettings.Instance().marginRect
-						+ GameSettings.Instance().getRectSize(),
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
-						- GameSettings.Instance().marginRect
-						+ GameSettings.Instance().getRectSize(), paint);
+		canvas.drawRect(getLeftEdgePoint() + getIndexPosition(columnIndex)
+				+ GameSettings.Instance().marginRect, getTopEdgePoint()
+				+ getIndexPosition(rowIndex)
+				+ GameSettings.Instance().marginRect, getLeftEdgePoint()
+				+ getIndexPosition(columnIndex)
+				- GameSettings.Instance().marginRect
+				+ GameSettings.Instance().getRectSize(), getTopEdgePoint()
+				+ getIndexPosition(rowIndex)
+				- GameSettings.Instance().marginRect
+				+ GameSettings.Instance().getRectSize(), paint);
 	}
 
 	private void drawHorizontalRect(int rowIndex, int columnIndex, Canvas canvas) {
-		keepOnScreen(rowIndex, columnIndex,
-				GameSettings.Instance().rectHorizontalStartPoint
-						+ (columnIndex * GameSettings.Instance().getRectSize())
-						+ GameSettings.Instance().marginRect
-						+ Game.Instance().getXDiffer() * -1,
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
-						+ GameSettings.Instance().marginRect,
-				GameSettings.Instance().rectHorizontalStartPoint
-						+ (columnIndex * GameSettings.Instance().getRectSize())
-						- GameSettings.Instance().marginRect
-						+ GameSettings.Instance().getRectSize()
-						+ Game.Instance().getXDiffer() * -1,
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
-						- GameSettings.Instance().marginRect
-						+ GameSettings.Instance().getRectSize(), canvas);
+		drawFixedRect(rowIndex,	columnIndex, getLeftEdgePoint() + getIndexPosition(columnIndex)	+ GameSettings.Instance().marginRect + getHorizontalDiffer(),
+				getTopEdgePoint() + getIndexPosition(rowIndex) + GameSettings.Instance().marginRect,
+				getLeftEdgePoint() + getIndexPosition(columnIndex) - GameSettings.Instance().marginRect	+ GameSettings.Instance().getRectSize()	+ getHorizontalDiffer(), 
+				getTopEdgePoint() + getIndexPosition(rowIndex) - GameSettings.Instance().marginRect	+ GameSettings.Instance().getRectSize(), canvas);
 	}
 
 	private void drawVerticalRect(int rowIndex, int columnIndex, Canvas canvas) {
-		keepOnScreen(rowIndex, columnIndex,
-				GameSettings.Instance().rectHorizontalStartPoint
-						+ (columnIndex * GameSettings.Instance().getRectSize())
+		drawFixedRect(
+				rowIndex,
+				columnIndex,
+				getLeftEdgePoint() + getIndexPosition(columnIndex)
 						+ GameSettings.Instance().marginRect,
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
+				getTopEdgePoint() + getIndexPosition(rowIndex)
 						+ GameSettings.Instance().marginRect
-						+ Game.Instance().getYDiffer() * -1,
-				GameSettings.Instance().rectHorizontalStartPoint
-						+ (columnIndex * GameSettings.Instance().getRectSize())
+						+ getVerticalDiffer(),
+				getLeftEdgePoint() + getIndexPosition(columnIndex)
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize(),
-				GameSettings.Instance().rectVerticalStartPoint
-						+ (rowIndex * GameSettings.Instance().getRectSize())
+				getTopEdgePoint() + getIndexPosition(rowIndex)
 						- GameSettings.Instance().marginRect
 						+ GameSettings.Instance().getRectSize()
-						+ Game.Instance().getYDiffer() * -1, canvas);
+						+ getVerticalDiffer(), canvas);
 	}
 
-	private void keepOnScreen(int rowIndex, int columnIndex, float leftPoint,
-			float topPoint, float rightPoint, float bottomPoint, Canvas canvas) {
-		
-		if (Game.Instance().isRowMovingHorizontal(rowIndex)) {
-			
-			if (isPointOverRightEdge(rightPoint)) {				
-				canvas.drawRect(getFixedLeftTurnedLeftPoint(leftPoint),	topPoint, getLeftTurnedPoint(rightPoint), bottomPoint, paint);
-				
-				if (!isPointOverRightEdge(leftPoint))
-					canvas.drawRect(leftPoint, topPoint, getRightEdgePoint(), bottomPoint, paint);
-				
-			} else if (isPointOverLeftEdge(leftPoint)) {
-				canvas.drawRect(getRightTurnedPoint(leftPoint),	topPoint, getFixedRightTurnedLeftPoint(rightPoint), bottomPoint, paint);
-				
-				if (!isPointOverLeftEdge(rightPoint))
-					canvas.drawRect(getLeftEdgePoint(), topPoint, rightPoint, bottomPoint, paint);
-				
-			} else {
-				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
-						paint);
-			}
-			
-		} else if (Game.Instance().isColumnMovingVertical(columnIndex)) {
-			if (topPoint < GameSettings.Instance().rectVerticalStartPoint) {
-				canvas.drawRect(
-						leftPoint,
-						topPoint + GameSettings.Instance().width,
-						rightPoint,
-						(bottomPoint + GameSettings.Instance().width) > (GameSettings
-								.Instance().rectVerticalStartPoint + GameSettings
-								.Instance().width) ? (GameSettings.Instance().rectVerticalStartPoint + GameSettings
-								.Instance().width)
-								: (bottomPoint + GameSettings.Instance().width),
-						paint);
-				if (bottomPoint > GameSettings.Instance().rectVerticalStartPoint)
-					canvas.drawRect(leftPoint,
-							GameSettings.Instance().rectVerticalStartPoint,
-							rightPoint, bottomPoint, paint);
-			} else if (bottomPoint > GameSettings.Instance().rectVerticalStartPoint
-					+ GameSettings.Instance().width) {
-				canvas.drawRect(
-						leftPoint,
-						(topPoint - GameSettings.Instance().width) < GameSettings
-								.Instance().rectVerticalStartPoint ? GameSettings
-								.Instance().rectVerticalStartPoint
-								: (topPoint - GameSettings.Instance().width),
-						rightPoint,
-						bottomPoint - GameSettings.Instance().width, paint);
+	private void drawGameOver(Canvas canvas) {
+		paint.setColor(Color.BLACK);
+		Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+		paint.setTypeface(tf);
+		paint.setTextSize(180);
+		paint.setAntiAlias(true);
+		paint.setTextAlign(Align.CENTER);
+		canvas.drawText("Game", GameSettings.Instance().width / 2, 325, paint);
+		canvas.drawText("Over", GameSettings.Instance().width / 2, 485, paint);
+	}
 
-				if (topPoint < GameSettings.Instance().rectVerticalStartPoint
-						+ GameSettings.Instance().width)
-					canvas.drawRect(leftPoint, topPoint, rightPoint,
-							GameSettings.Instance().rectVerticalStartPoint
-									+ GameSettings.Instance().width, paint);
-			} else {
+	private void drawInfoPanel(Canvas canvas) {
+		Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+		paint.setTypeface(tf);
+		paint.setColor(Color.WHITE);
+		paint.setTextSize(60);
+		paint.setAntiAlias(true);
+		paint.setTextAlign(Align.RIGHT);
+		canvas.drawText(
+				String.format("%d / %d", Game.Instance().score,
+						GameSettings.Instance().time),
+				GameSettings.Instance().width
+						- GameSettings.Instance().marginRect, 70, paint);
+	}
+
+	private void drawFixedRect(int rowIndex, int columnIndex, float leftPoint,
+			float topPoint, float rightPoint, float bottomPoint, Canvas canvas) {
+
+		if (Game.Instance().isRowMovingHorizontal(rowIndex)) {
+
+			if (isPointOverRightEdge(rightPoint)) {
+				canvas.drawRect(getFixedLeftTurnedLeftPoint(leftPoint),
+						topPoint, getLeftTurnedPoint(rightPoint), bottomPoint,
+						paint);
+
+				if (!isPointOverRightEdge(leftPoint))
+					canvas.drawRect(leftPoint, topPoint, getRightEdgePoint(),
+							bottomPoint, paint);
+
+			} else if (isPointOverLeftEdge(leftPoint)) {
+				canvas.drawRect(getRightTurnedPoint(leftPoint), topPoint,
+						getFixedRightTurnedRightPoint(rightPoint), bottomPoint,
+						paint);
+
+				if (!isPointOverLeftEdge(rightPoint))
+					canvas.drawRect(getLeftEdgePoint(), topPoint, rightPoint,
+							bottomPoint, paint);
+
+			} else
 				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
 						paint);
-			}
+
+		} else if (Game.Instance().isColumnMovingVertical(columnIndex)) {
+			if (isPointOverTopEdge(topPoint)) {
+				canvas.drawRect(leftPoint, getBottomTurnedPoint(topPoint),
+						rightPoint,
+						getFixedBottomTurnedBottomPoint(bottomPoint), paint);
+				if (!isPointOverTopEdge(bottomPoint))
+					canvas.drawRect(leftPoint, getTopEdgePoint(), rightPoint,
+							bottomPoint, paint);
+			} else if (isPointOverBottomEdge(bottomPoint)) {
+				canvas.drawRect(leftPoint, getFixedTopTurnedTopPoint(topPoint),
+						rightPoint, getTopTurnedPoint(bottomPoint), paint);
+
+				if (!isPointOverBottomEdge(topPoint))
+					canvas.drawRect(leftPoint, topPoint, rightPoint,
+							getBottomEdgePoint(), paint);
+
+			} else
+				canvas.drawRect(leftPoint, topPoint, rightPoint, bottomPoint,
+						paint);
 		}
 	}
-	
-	private float getRightEdgePoint() {
-		return GameSettings.Instance().rectHorizontalStartPoint + GameSettings.Instance().width;
+
+	private int getIndexPosition(int index) {
+		return index * GameSettings.Instance().getRectSize();
 	}
-	
+
+	private float getHorizontalDiffer() {
+		return Game.Instance().getXDiffer() * -1;
+	}
+
+	private float getVerticalDiffer() {
+		return Game.Instance().getYDiffer() * -1;
+	}
+
+	private float getRightEdgePoint() {
+		return GameSettings.Instance().rectHorizontalStartPoint
+				+ GameSettings.Instance().width;
+	}
+
 	private boolean isPointOverRightEdge(float point) {
 		return point > getRightEdgePoint();
 	}
-	
+
 	private float getLeftEdgePoint() {
 		return GameSettings.Instance().rectHorizontalStartPoint;
 	}
-	
+
 	private boolean isPointOverLeftEdge(float point) {
 		return point < getLeftEdgePoint();
 	}
-	
 
-	
+	private float getTopEdgePoint() {
+		return GameSettings.Instance().rectVerticalStartPoint;
+	}
+
+	private boolean isPointOverTopEdge(float point) {
+		return point < getTopEdgePoint();
+	}
+
+	private float getBottomEdgePoint() {
+		return GameSettings.Instance().rectVerticalStartPoint
+				+ GameSettings.Instance().width;
+	}
+
+	private boolean isPointOverBottomEdge(float point) {
+		return point > getBottomEdgePoint();
+	}
+
 	private float getLeftTurnedPoint(float point) {
 		return point - GameSettings.Instance().width;
 	}
-	
+
+	private float getTopTurnedPoint(float point) {
+		return point - GameSettings.Instance().width;
+	}
+
 	private float getRightTurnedPoint(float point) {
 		return point + GameSettings.Instance().width;
 	}
-	
-	
-	
+
+	private float getBottomTurnedPoint(float point) {
+		return point + GameSettings.Instance().width;
+	}
+
 	private boolean isLeftTurnedPointOverTheLeftEdge(float point) {
 		return getLeftTurnedPoint(point) < GameSettings.Instance().rectHorizontalStartPoint;
 	}
-	
-	private boolean isRightTurnedPointOverTheLeftEdge(float point) {
+
+	private boolean isRightTurnedPointOverTheRightEdge(float point) {
 		return getRightTurnedPoint(point) > getRightEdgePoint();
 	}
-	
+
+	private boolean isTopTurnedPointOverTheTopEdge(float point) {
+		return getTopTurnedPoint(point) < getTopEdgePoint();
+	}
+
+	private boolean isBottomTurnedPointOverTheBottomEdge(float point) {
+		return getBottomTurnedPoint(point) > getBottomEdgePoint();
+	}
+
 	private float getFixedLeftTurnedLeftPoint(float leftPoint) {
-		return isLeftTurnedPointOverTheLeftEdge(leftPoint) ? getLeftEdgePoint() : getLeftTurnedPoint(leftPoint);
+		return isLeftTurnedPointOverTheLeftEdge(leftPoint) ? getLeftEdgePoint()
+				: getLeftTurnedPoint(leftPoint);
 	}
-	
-	private float getFixedRightTurnedLeftPoint(float rightPoint) {
-		return isRightTurnedPointOverTheLeftEdge(rightPoint) ? getRightEdgePoint() : getRightTurnedPoint(rightPoint);
+
+	private float getFixedRightTurnedRightPoint(float rightPoint) {
+		return isRightTurnedPointOverTheRightEdge(rightPoint) ? getRightEdgePoint()
+				: getRightTurnedPoint(rightPoint);
 	}
-	
+
+	private float getFixedTopTurnedTopPoint(float topPoint) {
+		return isTopTurnedPointOverTheTopEdge(topPoint) ? getTopEdgePoint()
+				: getTopTurnedPoint(topPoint);
+	}
+
+	private float getFixedBottomTurnedBottomPoint(float bottomPoint) {
+		return isBottomTurnedPointOverTheBottomEdge(bottomPoint) ? getBottomEdgePoint()
+				: getBottomTurnedPoint(bottomPoint);
+	}
+
 	private void initComponents() {
 		paint = new Paint();
 	}
