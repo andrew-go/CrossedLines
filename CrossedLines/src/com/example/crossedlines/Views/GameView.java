@@ -106,12 +106,7 @@ public class GameView extends View {
 	
 	private void drawTimeLine(Canvas canvas) {
 		paint.setColor(getResources().getColor(R.color.color_ivory));
-		canvas.drawRect(GameSettings.Instance().marginRect, getTopEdgePoint() - 16, ((getRightEdgePoint() - GameSettings.Instance().marginRect) / 60) * GameSettings.Instance().time, getTopEdgePoint() - GameSettings.Instance().marginRect - 10, paint);
-	}
-	
-	private void drawPause(Canvas canvas) {
-		paint.setColor(getResources().getColor(R.color.color_ivory));
-		canvas.drawRect(GameSettings.Instance().marginRect + 4, 30, GameSettings.Instance().marginRect + 4 + 6, 90, paint);
+		canvas.drawRect(GameSettings.Instance().marginRect, getTopEdgePoint() - 16, ((getRightEdgePoint() - GameSettings.Instance().marginRect) / 60) * Game.Instance().gameTime, getTopEdgePoint() - GameSettings.Instance().marginRect - 10, paint);
 	}
 
 	private void drawFixedRect(int rowIndex, int columnIndex, float leftPoint,

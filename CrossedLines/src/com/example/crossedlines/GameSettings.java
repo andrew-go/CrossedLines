@@ -20,7 +20,7 @@ public class GameSettings {
 
 	public int marginRect = 2;
 
-	public int time = 60;
+	public int time = 2;
 
 	public int getRectSize() {
 		return 	width/rectsCount;

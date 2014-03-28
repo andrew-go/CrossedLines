@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_name" />
     
+    <TextView 
+        android:id="@+id/tvScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:text="fucking score!!!"/>
+    
     <LinearLayout 
         android:id="@+id/llButtons"
         android:layout_below="@+id/ivImage"

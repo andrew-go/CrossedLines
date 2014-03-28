@@ -5,7 +5,6 @@ import java.util.Random;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.crossedlines.Dialogs.GameOverDialog;
 import com.example.crossedlines.Views.GameView;
 
 public class Game {
@@ -33,6 +32,8 @@ public class Game {
 	public boolean touchActionMoveStatus;
 
 	public int score;
+	
+	public int gameTime = GameSettings.Instance().time;
 
 	public boolean isGameOver = false;
 
@@ -57,7 +58,7 @@ public class Game {
 		Game.Instance().initArray();
 
 		Game.Instance().score = 0;
-		GameSettings.Instance().time = 60;
+		gameTime = GameSettings.Instance().time;
 		gameThread.stopThread(true);
 		Game.Instance().isGameOver = false;
 		gameThread = new GameThread(gameView, gameOverHandler);
@@ -216,7 +217,7 @@ public class Game {
 					count++;
 				else {
 					if (count > 2) {
-						GameSettings.Instance().time += count - 1;
+						gameTime += count - 1;
 						for (int k = j - count; 0 <= count; k++) {
 							gameArr[i][k] = Math.abs(gameArr[i][k]) * -1;
 							count--;
@@ -233,7 +234,7 @@ public class Game {
 					count++;
 				else {
 					if (count > 2) {
-						GameSettings.Instance().time += count - 1;
+						gameTime += count - 1;
 						for (int k = j - count; 0 <= count; k++) {
 							gameArr[k][i] = Math.abs(gameArr[k][i]) * -1;
 							count--;
@@ -286,7 +287,7 @@ public class Game {
 	    public void run() {
     		int count = 0;
 	    	while (!Game.Instance().isGameOver && !stop) {
-	    		if (GameSettings.Instance().time == 0) {
+	    		if (Game.Instance().gameTime == 0) {
 	    			Game.Instance().isGameOver = true;
 	    			gameOverHandler.onGameOver();
 	    			return;
@@ -294,7 +295,7 @@ public class Game {
 		    	try {
 					Thread.sleep(100);
 					if (count++ == 10) {
-						GameSettings.Instance().time--;
+						Game.Instance().gameTime--;
 						count = 0;
 					}
 				} catch (InterruptedException e) {
