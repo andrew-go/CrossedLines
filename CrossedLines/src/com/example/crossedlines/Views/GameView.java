@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Typeface;
+import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.crossedlines.Game;
@@ -18,6 +19,16 @@ public class GameView extends View {
 
 	public GameView(Context context) {
 		super(context);
+		initComponents();
+	}	
+
+	public GameView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initComponents();
+	}
+	
+	public GameView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
 		initComponents();
 	}
 
@@ -38,8 +49,6 @@ public class GameView extends View {
 			}
 		if (!Game.Instance().isGameOver)
 			drawInfoPanel(canvas);
-		else
-			drawGameOver(canvas);
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
@@ -80,29 +89,29 @@ public class GameView extends View {
 						+ getVerticalDiffer(), canvas);
 	}
 
-	private void drawGameOver(Canvas canvas) {
-		paint.setColor(Color.BLACK);
-		Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
-		paint.setTypeface(tf);
-		paint.setTextSize(180);
-		paint.setAntiAlias(true);
-		paint.setTextAlign(Align.CENTER);
-		canvas.drawText("Game", GameSettings.Instance().width / 2, 325, paint);
-		canvas.drawText("Over", GameSettings.Instance().width / 2, 485, paint);
-	}
-
 	private void drawInfoPanel(Canvas canvas) {
-		Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+		Typeface tf = Typeface.create("Helvetica", Typeface.NORMAL);
 		paint.setTypeface(tf);
-		paint.setColor(Color.WHITE);
+		paint.setColor(getResources().getColor(R.color.color_ivory));
 		paint.setTextSize(60);
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.RIGHT);
 		canvas.drawText(
-				String.format("%d / %d", Game.Instance().score,
-						GameSettings.Instance().time),
+				String.format("%d", Game.Instance().score),
 				GameSettings.Instance().width
-						- GameSettings.Instance().marginRect, 70, paint);
+						- GameSettings.Instance().marginRect - 4, 70, paint);
+		drawTimeLine(canvas);
+		//drawPause(canvas);
+	}
+	
+	private void drawTimeLine(Canvas canvas) {
+		paint.setColor(getResources().getColor(R.color.color_ivory));
+		canvas.drawRect(GameSettings.Instance().marginRect, getTopEdgePoint() - 16, ((getRightEdgePoint() - GameSettings.Instance().marginRect) / 60) * GameSettings.Instance().time, getTopEdgePoint() - GameSettings.Instance().marginRect - 10, paint);
+	}
+	
+	private void drawPause(Canvas canvas) {
+		paint.setColor(getResources().getColor(R.color.color_ivory));
+		canvas.drawRect(GameSettings.Instance().marginRect + 4, 30, GameSettings.Instance().marginRect + 4 + 6, 90, paint);
 	}
 
 	private void drawFixedRect(int rowIndex, int columnIndex, float leftPoint,

@@ -2,10 +2,11 @@ package com.example.crossedlines;
 
 import java.util.Random;
 
-import com.example.crossedlines.Views.GameView;
-
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.example.crossedlines.Dialogs.GameOverDialog;
+import com.example.crossedlines.Views.GameView;
 
 public class Game {
 
@@ -16,6 +17,9 @@ public class Game {
 
 	public float currentX;
 	public float currentY;
+	
+	public float moveX;
+	public float moveY;
 
 	public enum Way {
 		UP, DOWN, LEFT, RIGHT
@@ -24,19 +28,19 @@ public class Game {
 	public Way way;
 	public int[][] gameArr = new int[GameSettings.Instance().rectsCount][GameSettings
 			.Instance().rectsCount];
-	public int[][] gameArrClone = new int[GameSettings.Instance().rectsCount][GameSettings
-			.Instance().rectsCount];
 	public Random random = new Random();
 	public SelectedRect selecetedRect;
 	public boolean touchActionMoveStatus;
 
 	public int score;
-	
+
 	public boolean isGameOver = false;
-	
+
 	public GameView gameView;
 	public GameThread gameThread;
 	
+	public IGameOverHandler gameOverHandler;
+
 	public static Game instance;
 
 	public static Game Instance() {
@@ -46,15 +50,17 @@ public class Game {
 	public Game() {
 		initArray();
 	}
-	
+
 	public void startNewGame() {
+		if (gameThread == null)
+			return;
 		Game.Instance().initArray();
-		
+
 		Game.Instance().score = 0;
 		GameSettings.Instance().time = 60;
 		gameThread.stopThread(true);
 		Game.Instance().isGameOver = false;
-		gameThread = new GameThread(gameView);
+		gameThread = new GameThread(gameView, gameOverHandler);
 		gameThread.start();
 		gameView.postInvalidate();
 	}
@@ -65,25 +71,24 @@ public class Game {
 				gameArr[i][j] = random
 						.nextInt(GameSettings.Instance().colorsCount + 1) + 1;
 	}
-
-	public void setWay(float firstX, float firstY, float secondX, float secondY) {
-		if ((secondX < (firstX - thresHold) && (secondY > (firstY - thresHold)) && (secondY < (firstY + thresHold)))) {
+		
+	public void setWay() {
+		if ((currentX < (startX - thresHold) && (currentY > (startY - thresHold)) && (currentY < (startY + thresHold)))) {
 			Game.Instance().way = Way.LEFT;
 			touchActionMoveStatus = false;
-		} else if ((secondX > (firstX + thresHold)
-				&& (secondY > (firstY - thresHold)) && (secondY < (firstY + thresHold)))) {
+		} else if ((currentX > (startX + thresHold)
+				&& (currentY > (startY - thresHold)) && (currentY < (startY + thresHold)))) {
 			Game.Instance().way = Way.RIGHT;
 			touchActionMoveStatus = false;
-		} else if ((secondY < (firstY - thresHold)
-				&& (secondX > (firstX - thresHold)) && (secondX < (firstX + thresHold)))) {
+		} else if ((currentY < (startY - thresHold)
+				&& (currentX > (startX - thresHold)) && (currentX < (startX + thresHold)))) {
 			Game.Instance().way = Way.UP;
 			touchActionMoveStatus = false;
-		} else if ((secondY > (firstY + thresHold)
-				&& (secondX > (firstX - thresHold)) && (secondX < (firstX + thresHold)))) {
+		} else if ((currentY > (startY + thresHold)
+				&& (currentX > (startX - thresHold)) && (currentX < (startX + thresHold)))) {
 			Game.Instance().way = Way.DOWN;
 			touchActionMoveStatus = false;
 		}
-
 	}
 
 	public boolean isRowMovingHorizontal(int rowIndex) {
@@ -201,7 +206,7 @@ public class Game {
 		}
 
 	}
-	
+
 	public boolean checkCombinedLines() {
 		boolean wasChanged = false;
 		int count = 0;
@@ -242,8 +247,14 @@ public class Game {
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i ++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j ++) 
 				if (gameArr[i][j] < 0)
-					gameArr[i][j] = random.nextInt(GameSettings.Instance().colorsCount + 1) + 1;
+					lowerColumn(i, j);
 		return wasChanged;
+	}
+	
+	private void lowerColumn(int rowIndex, int columnIndex) {
+		for (int i = rowIndex; i > 0; i--)
+			gameArr[i][columnIndex] = gameArr[i - 1][columnIndex];
+		gameArr[0][columnIndex] = random.nextInt(GameSettings.Instance().colorsCount + 1) + 1;
 	}
 
 	public static class SelectedRect {
@@ -256,29 +267,36 @@ public class Game {
 			this.rowIndex = rowIndex;
 		}
 	}
-	
+
 	public static class GameThread extends Thread {
 
 		View view;
+		IGameOverHandler gameOverHandler;
 		boolean stop;
-		
+
 		public void stopThread(boolean stop) {
 			this.stop = stop;
 		}
 
-		public GameThread(View view) {
+		public GameThread(View view, IGameOverHandler gameOverHandler) {
 			this.view = view;
+			this.gameOverHandler = gameOverHandler;
 		}
-		
+
 	    public void run() {
+    		int count = 0;
 	    	while (!Game.Instance().isGameOver && !stop) {
 	    		if (GameSettings.Instance().time == 0) {
 	    			Game.Instance().isGameOver = true;
+	    			gameOverHandler.onGameOver();
 	    			return;
 	    		}   		
 		    	try {
-					this.sleep(1000);
-					GameSettings.Instance().time--;
+					Thread.sleep(100);
+					if (count++ == 10) {
+						GameSettings.Instance().time--;
+						count = 0;
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -286,6 +304,11 @@ public class Game {
 	    	}
 	    }
 
+	}
+	
+	public boolean isOnGameView(MotionEvent event) {
+		return event.getX() > GameSettings.Instance().rectHorizontalStartPoint && event.getX() < GameSettings.Instance().rectHorizontalStartPoint + GameSettings.Instance().width 
+				&& event.getY() > GameSettings.Instance().rectVerticalStartPoint && event.getY() < GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().width;
 	}
 
 }

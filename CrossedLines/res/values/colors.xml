@@ -1,10 +1,12 @@
 <resources>
 
-    <color name="color_brown">#6E5D53</color>
-    <color name="color_orange">#F68C42</color>
-    <color name="color_green">#A1CC56</color>
-    <color name="color_ivory">#F2F1B1</color>
-    <color name="color_blue">#77C3A7</color>
-    <color name="color_purple">#EB6475</color>
+<color name="color_brown">#6E5D53</color> 
+<color name="color_orange">#F68C42</color> 
+<color name="color_green">#A1CC56</color> 
+<color name="color_ivory">#F2F1B1</color> 
+<color name="color_blue">#77C3A7</color> 
+<color name="color_purple">#EB6475</color> 
+<color name="color_background">#1D1F2B</color> 
+<color name="color_text">#41878f</color>
 
 </resources>

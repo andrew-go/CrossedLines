@@ -8,8 +8,8 @@ public class GameSettings {
 		return instance == null ? instance = new GameSettings() : instance;
 	}
 
-	public int height = 800;
-	public int width = 480;
+	public int height;
+	public int width;
 
 	public int rectsCount = 6;
 
@@ -19,7 +19,7 @@ public class GameSettings {
 	public int colorsCount = 5;
 
 	public int marginRect = 2;
-	
+
 	public int time = 60;
 
 	public int getRectSize() {
