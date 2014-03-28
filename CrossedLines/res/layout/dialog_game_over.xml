@@ -4,40 +4,37 @@
     android:layout_height="match_parent"
     tools:context=".MenuActivity" >
 
-    <ImageView
-        android:id="@+id/ivImage"
-        android:src="@drawable/ic_launcher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name" />
-    
     <TextView 
         android:id="@+id/tvScore"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:text="fucking score!!!"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"/>
     
     <LinearLayout 
         android:id="@+id/llButtons"
-        android:layout_below="@+id/ivImage"
+        android:layout_below="@+id/tvScore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:orientation="horizontal">
         
-	    <ImageView
-	        android:src="@drawable/ic_launcher"
+	    <TextView 
 	        android:layout_width="match_parent"
-	        android:layout_weight="1"
 	        android:layout_height="wrap_content"
-	        android:contentDescription="@string/app_name" 
+	        android:layout_weight="1"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:text="Start new game"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:clickable="true"
 	        android:onClick="startNewGame" />
 	    
-	    <ImageView
-	        android:src="@drawable/ic_launcher"
+	    <TextView 
 	        android:layout_width="match_parent"
-	        android:layout_weight="1"
 	        android:layout_height="wrap_content"
-	        android:contentDescription="@string/app_name" 
+	        android:layout_weight="1"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:text="To main menu"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:clickable="true"
 	        android:onClick="startMainMenu" />
 	                
     </LinearLayout>

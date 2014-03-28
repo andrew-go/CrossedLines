@@ -74,6 +74,9 @@ public class GameActivity extends FragmentActivity {
 			
 			@Override
 			public void onGameOver() {
+			    Bundle args = new Bundle();
+			    args.putInt("score", Game.Instance().score);
+			    gameOverDialog.setArguments(args);
 				gameOverDialog.show(getSupportFragmentManager(), "gameOverDialog");
 			}
 		};
