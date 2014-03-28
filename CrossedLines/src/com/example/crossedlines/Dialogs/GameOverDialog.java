@@ -21,7 +21,7 @@ public class GameOverDialog extends DialogFragment {
 				.setTitle("Game Over");
 		int score = getArguments().getInt("score");
 		TextView tvScore = (TextView) view.findViewById(R.id.tvScore);
-		tvScore.setText(String.format("%s %s %d", getActivity().getString(R.string.time_is_up), getActivity().getString(R.string.your_score_is), score));
+		tvScore.setText(String.format("%s %s %d.", getActivity().getString(R.string.time_is_up), getActivity().getString(R.string.your_score_is), score));
 		return builder.create();
 	}
 

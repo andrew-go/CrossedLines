@@ -217,7 +217,7 @@ public class Game {
 					count++;
 				else {
 					if (count > 2) {
-						gameTime += count - 1;
+						gameTime += count - 2;
 						for (int k = j - count; 0 <= count; k++) {
 							gameArr[i][k] = Math.abs(gameArr[i][k]) * -1;
 							count--;
@@ -234,7 +234,7 @@ public class Game {
 					count++;
 				else {
 					if (count > 2) {
-						gameTime += count - 1;
+						gameTime += count - 2;
 						for (int k = j - count; 0 <= count; k++) {
 							gameArr[k][i] = Math.abs(gameArr[k][i]) * -1;
 							count--;

@@ -25,6 +25,7 @@
 	        android:text="Start new game"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:clickable="true"
+	        android:layout_margin="5dp"
 	        android:onClick="startNewGame" />
 	    
 	    <TextView 
@@ -35,6 +36,7 @@
 	        android:text="To main menu"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:clickable="true"
+	        android:layout_margin="5dp"
 	        android:onClick="startMainMenu" />
 	                
     </LinearLayout>
