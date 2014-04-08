@@ -15,7 +15,8 @@
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         <activity
             android:name="com.example.crossedlines.Activities.MenuActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

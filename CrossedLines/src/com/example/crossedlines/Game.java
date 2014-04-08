@@ -55,12 +55,13 @@ public class Game {
 	public void startNewGame() {
 		if (gameThread == null)
 			return;
+		Game.Instance().gameThread.interrupt();
 		Game.Instance().initArray();
 
 		Game.Instance().score = 0;
 		gameTime = GameSettings.Instance().time;
-		gameThread.stopThread(true);
 		Game.Instance().isGameOver = false;
+		
 		gameThread = new GameThread(gameView, gameOverHandler);
 		gameThread.start();
 		gameView.postInvalidate();
@@ -273,11 +274,6 @@ public class Game {
 
 		View view;
 		IGameOverHandler gameOverHandler;
-		boolean stop;
-
-		public void stopThread(boolean stop) {
-			this.stop = stop;
-		}
 
 		public GameThread(View view, IGameOverHandler gameOverHandler) {
 			this.view = view;
@@ -286,7 +282,7 @@ public class Game {
 
 	    public void run() {
     		int count = 0;
-	    	while (!Game.Instance().isGameOver && !stop) {
+	    	while (!Game.Instance().isGameOver) {
 	    		if (Game.Instance().gameTime == 0) {
 	    			Game.Instance().isGameOver = true;
 	    			gameOverHandler.onGameOver();

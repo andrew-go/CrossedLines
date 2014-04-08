@@ -11,7 +11,7 @@ public class GameSettings {
 	public int height;
 	public int width;
 
-	public int rectsCount = 7;
+	public int rectsCount = 6;
 
 	public int rectHorizontalStartPoint = 0;
 	public int rectVerticalStartPoint = 100;

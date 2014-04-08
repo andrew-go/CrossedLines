@@ -32,7 +32,13 @@ public class GameActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		Game.Instance().gameThread.stopThread(true);
+		Game.Instance().gameThread.interrupt();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Game.Instance().isGameOver = true;
 	}
 
 	private void setGameSettings() {
@@ -113,7 +119,6 @@ public class GameActivity extends FragmentActivity {
 	
 	private void initGameThread() {
 		if (Game.Instance().gameThread != null) {
-			Game.Instance().gameThread.interrupt();
 			Game.Instance().startNewGame();
 			return;
 		}

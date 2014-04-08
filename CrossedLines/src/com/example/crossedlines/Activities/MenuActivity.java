@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-import com.example.crossedlines.Game;
 import com.example.crossedlines.GameSettings;
 import com.example.crossedlines.R;
 import com.example.crossedlines.Views.MenuView;
