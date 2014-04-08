@@ -26,7 +26,7 @@ public class GameActivity extends FragmentActivity {
 		setContentView(R.layout.activity_game);
 		setGameSettings();
 		initComponents();
-		checkCombinedLines();
+		Game.Instance().checkCombinedLines();
 	}
 	
 	@Override
@@ -130,11 +130,7 @@ public class GameActivity extends FragmentActivity {
 		gameOverDialog = new GameOverDialog();		
 		gameOverDialog.setCancelable(false);
 	}
-	
-	private void checkCombinedLines() {
-		Game.Instance().checkCombinedLines();
-	}
-	
+
 	public void startNewGame(View view) {
 		Game.Instance().startNewGame();
 		gameOverDialog.dismiss();

@@ -43,6 +43,8 @@ public class GameView extends View {
 					drawHorizontalRect(i, j, canvas);
 				} else if (Game.Instance().isColumnMovingVertical(j)) {
 					drawVerticalRect(i, j, canvas);
+				} else if (Game.Instance().gameArr[i][j] < 0){
+					drawSmallRect(i, j, canvas);
 				} else {
 					drawRect(i, j, canvas);
 				}
@@ -61,6 +63,19 @@ public class GameView extends View {
 				+ GameSettings.Instance().getRectSize(), getTopEdgePoint()
 				+ getIndexPosition(rowIndex)
 				- GameSettings.Instance().marginRect
+				+ GameSettings.Instance().getRectSize(), paint);
+	}
+	
+	private void drawSmallRect(int rowIndex, int columnIndex, Canvas canvas) {
+		canvas.drawRect(getLeftEdgePoint() + getIndexPosition(columnIndex)
+				+ GameSettings.Instance().marginRect*2, getTopEdgePoint()
+				+ getIndexPosition(rowIndex)
+				+ GameSettings.Instance().marginRect*2, getLeftEdgePoint()
+				+ getIndexPosition(columnIndex)
+				- GameSettings.Instance().marginRect*2
+				+ GameSettings.Instance().getRectSize(), getTopEdgePoint()
+				+ getIndexPosition(rowIndex)
+				- GameSettings.Instance().marginRect*2
 				+ GameSettings.Instance().getRectSize(), paint);
 	}
 

@@ -246,6 +246,20 @@ public class Game {
 					count = 0;
 				}
 			}
+		if (wasChanged) {
+
+			gameThread.isPaused = true;
+//			drawThread = new DrawThread(gameView);
+//			drawThread.start();
+			gameView.postInvalidate();
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			gameThread.isPaused = false;
+		}
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i ++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j ++) 
 				if (gameArr[i][j] < 0)
@@ -274,6 +288,7 @@ public class Game {
 
 		View view;
 		IGameOverHandler gameOverHandler;
+		boolean isPaused;
 
 		public GameThread(View view, IGameOverHandler gameOverHandler) {
 			this.view = view;
@@ -283,6 +298,8 @@ public class Game {
 	    public void run() {
     		int count = 0;
 	    	while (!Game.Instance().isGameOver) {
+	    		if (isPaused)
+	    			continue;
 	    		if (Game.Instance().gameTime == 0) {
 	    			Game.Instance().isGameOver = true;
 	    			gameOverHandler.onGameOver();
@@ -302,6 +319,30 @@ public class Game {
 	    }
 
 	}
+	
+//	public static class DrawThread extends Thread {
+//
+//		View view;
+//
+//		public DrawThread(View view) {
+//			this.view = view;
+//		}
+//
+//	    public void run() {
+//    		int count = 0;
+//	    	while (count < 3) {
+//	    		try {
+//					sleep(300);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//	    		count++;
+//		    	view.postInvalidate();
+//	    	}
+//	    }
+//
+//	}
 	
 	public boolean isOnGameView(MotionEvent event) {
 		return event.getX() > GameSettings.Instance().rectHorizontalStartPoint && event.getX() < GameSettings.Instance().rectHorizontalStartPoint + GameSettings.Instance().width 

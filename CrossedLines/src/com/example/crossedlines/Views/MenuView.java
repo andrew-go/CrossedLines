@@ -44,7 +44,7 @@ public class MenuView extends View {
 		initEmptyRect();
 		for (int i = 0; i < (GameSettings.Instance().width / rectSize); i++)
 			for (int j = 0; j < (GameSettings.Instance().height / rectSize); j++) {
-				if (j < 11 && emptyRect[j][i] == 0)
+				if (j < 13 && i < 24 && emptyRect[j][i] == 0)
 					continue;
 				paint.setColor(getColor(random.nextInt(GameSettings.Instance().colorsCount + 1) + 1));
 				canvas.drawRect(rectSize * i + marginRect, rectSize * j + marginRect, rectSize * i + rectSize - marginRect, rectSize * j + rectSize - marginRect, paint);
@@ -56,12 +56,12 @@ public class MenuView extends View {
 		PixelLetterContainer pixelLetterContainer = new PixelLetterContainer();
 		int rightShift = 15;
 		for (int[][] letter : pixelLetterContainer.scrollWord) {
-			drawWord(letter, rightShift, 3, canvas);
+			drawWord(letter, rightShift, 6, canvas);
 			rightShift += (letter[0].length + 1) * 10;
 		}
 		rightShift = 95;
 		for (int[][] letter : pixelLetterContainer.lineWord) {
-			drawWord(letter, rightShift, 11, canvas);
+			drawWord(letter, rightShift, 14, canvas);
 			rightShift += (letter[0].length + 1) * 10;
 		}
 
@@ -69,16 +69,18 @@ public class MenuView extends View {
 	
 	private void initEmptyRect() {
 		int[][] emptyRect = {{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-							{2,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,2,0,0,0,2},
+							{2,2,2,2,2,2,2,0,0,2,2,0,2,2,2,2,2,2,2,2,2,2,2,2},
+							{2,0,2,0,2,0,2,0,0,0,0,0,2,2,2,0,2,0,2,2,2,2,2,2},
 							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,2,2},
-							{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0},
+							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2},
+							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-							{2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+							{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 							{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 							{0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 							{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-							{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}};
+							{2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+							{2,2,2,0,2,2,0,0,0,0,2,2,0,0,0,2,2,2,0,2,2,0,0,2}};
 		this.emptyRect = emptyRect;
 	}
 	
@@ -88,7 +90,7 @@ public class MenuView extends View {
 				if (letter[i][j] == 0)
 					continue;
 				paint.setColor(Color.WHITE);
-				canvas.drawRect(10 * j + rightShift + letterRect, 10 * i + downShift * 10 + letterRect, 10 * j + 10  + rightShift - letterRect, 10 * i + 10 + downShift * 10 - letterRect, paint);
+				canvas.drawRect(10 * j + rightShift + letterRect, 10 * i + downShift * 10 + letterRect + 5, 10 * j + 10  + rightShift - letterRect, 10 * i + 10 + downShift * 10 - letterRect + 5, paint);
 			}
 	}
 	
