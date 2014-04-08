@@ -32,7 +32,7 @@ public class GameActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		Game.Instance().gameThread.interrupt();
+		Game.Instance().isGameOver = true;
 	}
 	
 	@Override
