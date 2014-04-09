@@ -18,6 +18,7 @@ public class MenuView extends View {
 	Paint paint;
 	
 	int rectSize = 20;
+	int letterSize = 10;
 	int marginRect = 2;
 	
 	int letterRect = 0;
@@ -42,9 +43,10 @@ public class MenuView extends View {
 		super.onDraw(canvas);
 		paint = new Paint();
 		initEmptyRect();
+		int a = (GameSettings.Instance().width - 450) / (2 * 20);
 		for (int i = 0; i < (GameSettings.Instance().width / rectSize); i++)
 			for (int j = 0; j < (GameSettings.Instance().height / rectSize); j++) {
-				if (j < 13 && i < 24 && emptyRect[j][i] == 0)
+				if (j < 13 && i >= a && i < 24 + a && emptyRect[j][i - a] == 0)
 					continue;
 				paint.setColor(getColor(random.nextInt(GameSettings.Instance().colorsCount + 1) + 1));
 				canvas.drawRect(rectSize * i + marginRect, rectSize * j + marginRect, rectSize * i + rectSize - marginRect, rectSize * j + rectSize - marginRect, paint);
@@ -54,12 +56,12 @@ public class MenuView extends View {
 	
 	private void drawGameName(Canvas canvas) {
 		PixelLetterContainer pixelLetterContainer = new PixelLetterContainer();
-		int rightShift = 15;
+		int rightShift = (GameSettings.Instance().width - 450) / 2;
 		for (int[][] letter : pixelLetterContainer.scrollWord) {
 			drawWord(letter, rightShift, 6, canvas);
 			rightShift += (letter[0].length + 1) * 10;
 		}
-		rightShift = 95;
+		rightShift = (GameSettings.Instance().width - 450) / 2 + 80;
 		for (int[][] letter : pixelLetterContainer.lineWord) {
 			drawWord(letter, rightShift, 14, canvas);
 			rightShift += (letter[0].length + 1) * 10;
@@ -90,7 +92,7 @@ public class MenuView extends View {
 				if (letter[i][j] == 0)
 					continue;
 				paint.setColor(Color.WHITE);
-				canvas.drawRect(10 * j + rightShift + letterRect, 10 * i + downShift * 10 + letterRect + 5, 10 * j + 10  + rightShift - letterRect, 10 * i + 10 + downShift * 10 - letterRect + 5, paint);
+				canvas.drawRect(letterSize * j + rightShift + letterRect, letterSize * i + downShift * 10 + letterRect + 5, letterSize * j + letterSize  + rightShift - letterRect, letterSize * i + letterSize + downShift * 10 - letterRect + 5, paint);
 			}
 	}
 	

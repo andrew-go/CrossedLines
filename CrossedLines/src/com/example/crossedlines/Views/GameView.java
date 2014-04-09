@@ -1,6 +1,8 @@
 package com.example.crossedlines.Views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +18,8 @@ import com.example.crossedlines.R;
 public class GameView extends View {
 
 	Paint paint;
+	
+	public boolean s = false;
 
 	public GameView(Context context) {
 		super(context);
@@ -35,7 +39,8 @@ public class GameView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-
+		if (s)
+			return;
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j++) {
 				paint.setColor(getColor(Game.Instance().gameArr[i][j]));
@@ -51,6 +56,10 @@ public class GameView extends View {
 			}
 		if (!Game.Instance().isGameOver)
 			drawInfoPanel(canvas);
+	}
+	
+	public void dra() {
+		invalidate();
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
@@ -113,10 +122,14 @@ public class GameView extends View {
 		paint.setTextAlign(Align.RIGHT);
 		canvas.drawText(
 				String.format("%d", Game.Instance().score),
-				GameSettings.Instance().width
-						- GameSettings.Instance().marginRect - 4, 70, paint);
+				GameSettings.Instance().width, 70, paint);
 		drawTimeLine(canvas);
-		//drawPause(canvas);
+		Bitmap pause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
+		Bitmap restart = BitmapFactory.decodeResource(getResources(), R.drawable.restart);
+		
+		canvas.drawColor(Color.TRANSPARENT);
+		canvas.drawBitmap(pause, 0, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount, null);
+		canvas.drawBitmap(restart, GameSettings.Instance().width - pause.getWidth() * 2, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount, null);
 	}
 	
 	private void drawTimeLine(Canvas canvas) {

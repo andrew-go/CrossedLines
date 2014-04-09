@@ -27,6 +27,8 @@ public class GameActivity extends FragmentActivity {
 		setGameSettings();
 		initComponents();
 		Game.Instance().checkCombinedLines();
+		Game.Instance().sharedPreferences = getPreferences(MODE_PRIVATE);
+		Game.Instance().load();
 	}
 	
 	@Override
@@ -80,10 +82,13 @@ public class GameActivity extends FragmentActivity {
 			
 			@Override
 			public void onGameOver() {
-			    Bundle args = new Bundle();
-			    args.putInt("score", Game.Instance().score);
-			    gameOverDialog.setArguments(args);
+//			    Bundle args = new Bundle();
+//			    args.putInt("score", Game.Instance().score);
+//			    gameOverDialog.setArguments(args);
+
 				gameOverDialog.show(getSupportFragmentManager(), "gameOverDialog");
+				if (Game.Instance().score > Game.Instance().highScore)
+					Game.Instance().save(Game.highScoreField, Game.Instance().score);
 			}
 		};
 	}

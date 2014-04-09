@@ -2,6 +2,9 @@ package com.example.crossedlines;
 
 import java.util.Random;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -41,6 +44,11 @@ public class Game {
 	public GameThread gameThread;
 	
 	public IGameOverHandler gameOverHandler;
+	
+	public SharedPreferences sharedPreferences;
+	
+	public static final String highScoreField = "HIGH_SCORE";
+	public int highScore;
 
 	public static Game instance;
 
@@ -246,20 +254,22 @@ public class Game {
 					count = 0;
 				}
 			}
-		if (wasChanged) {
-
-			gameThread.isPaused = true;
-//			drawThread = new DrawThread(gameView);
-//			drawThread.start();
-			gameView.postInvalidate();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			gameThread.isPaused = false;
-		}
+//		if (wasChanged) {
+//
+//			gameThread.isPaused = true;
+////			drawThread = new DrawThread(gameView);
+////			drawThread.start();
+//			gameView.s = true;
+//			gameView.dra();
+//			try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			gameView.s = false;
+//			gameThread.isPaused = false;
+//		}
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i ++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j ++) 
 				if (gameArr[i][j] < 0)
@@ -349,4 +359,14 @@ public class Game {
 				&& event.getY() > GameSettings.Instance().rectVerticalStartPoint && event.getY() < GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().width;
 	}
 
+	public void save(String field, int score) {		
+	    Editor ed = sharedPreferences.edit();
+	    ed.putInt(highScoreField, score);
+	    ed.commit();
+	}
+	
+	public void load() {
+		highScore = sharedPreferences.getInt(highScoreField, 0);
+    }
+	
 }
