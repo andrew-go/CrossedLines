@@ -4,9 +4,51 @@
     android:layout_height="match_parent"
     tools:context=".MenuActivity" >
 
-	<com.example.crossedlines.Views.MenuView
+	<gtv.andrew.crossedlines.Views.MenuView
 	    android:id="@+id/menuView"
 	    android:layout_height="match_parent"
 	    android:layout_width="match_parent" />
+	
+	<TextView 
+	    android:id="@+id/tvNewGame"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	    android:text="New Game"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:background="@color/color_background"
+	    android:clickable="true"
+	    android:onClick="onNewGameClick"/>
+	
+	<TextView 
+	    android:id="@+id/tvSettings"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	    android:text="Settings"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:background="@color/color_background"
+	    android:enabled="false"
+	    android:clickable="true"
+	    android:onClick="onSettingsClick"/>
+	
+	<TextView 
+	    android:id="@+id/tvHowToPlay"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	    android:text="How to play"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:background="@color/color_background"
+	    android:enabled="false"
+	    android:clickable="true"
+	    android:onClick="onHowToPlayClick"/>
+		
+	<TextView 
+	    android:id="@+id/tvRateApp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	    android:text="Rate app"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:background="@color/color_background"
+	    android:clickable="true"
+	    android:onClick="onRateAppClick"/>
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.crossedlines;
+package gtv.andrew.crossedlines;
 
 public class GameSettings {	
 

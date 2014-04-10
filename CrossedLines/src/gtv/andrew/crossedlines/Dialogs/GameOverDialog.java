@@ -1,5 +1,6 @@
-package com.example.crossedlines.Dialogs;
+package gtv.andrew.crossedlines.Dialogs;
 
+import gtv.andrew.crossedlines.Game;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,8 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.crossedlines.Game;
-import com.example.crossedlines.R;
+import gtv.andrew.crossedlines.R;
 
 public class GameOverDialog extends DialogFragment {
 

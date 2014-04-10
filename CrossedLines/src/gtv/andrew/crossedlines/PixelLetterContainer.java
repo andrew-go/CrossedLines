@@ -1,4 +1,4 @@
-package com.example.crossedlines;
+package gtv.andrew.crossedlines;
 
 import java.util.ArrayList;
 import java.util.List;

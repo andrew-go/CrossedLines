@@ -1,5 +1,8 @@
-package com.example.crossedlines.Views;
+package gtv.andrew.crossedlines.Views;
 
+import gtv.andrew.crossedlines.Game;
+import gtv.andrew.crossedlines.GameSettings;
+import gtv.andrew.crossedlines.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,18 +10,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.example.crossedlines.Game;
-import com.example.crossedlines.GameSettings;
-import com.example.crossedlines.R;
 
 public class GameView extends View {
 
 	Paint paint;
-	
+
 	public boolean s = false;
 
 	public GameView(Context context) {
@@ -30,7 +28,7 @@ public class GameView extends View {
 		super(context, attrs);
 		initComponents();
 	}
-	
+
 	public GameView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		initComponents();
@@ -43,7 +41,7 @@ public class GameView extends View {
 			return;
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j++) {
-				paint.setColor(getColor(Game.Instance().gameArr[i][j]));
+				paint.setColor(getColor(Math.abs(Game.Instance().gameArr[i][j])));
 				if (Game.Instance().isRowMovingHorizontal(i)) {
 					drawHorizontalRect(i, j, canvas);
 				} else if (Game.Instance().isColumnMovingVertical(j)) {
@@ -56,10 +54,6 @@ public class GameView extends View {
 			}
 		if (!Game.Instance().isGameOver)
 			drawInfoPanel(canvas);
-	}
-	
-	public void dra() {
-		invalidate();
 	}
 
 	private void drawRect(int rowIndex, int columnIndex, Canvas canvas) {
@@ -74,18 +68,23 @@ public class GameView extends View {
 				- GameSettings.Instance().marginRect
 				+ GameSettings.Instance().getRectSize(), paint);
 	}
-	
+
 	private void drawSmallRect(int rowIndex, int columnIndex, Canvas canvas) {
+//		Color c = new Color();
+//		paint.setColor(c.alpha(Game.Instance().gameArr[rowIndex][columnIndex]));
+		int a = 255 / (GameSettings.Instance().getRectSize()/2);
+		paint.setAlpha(255 - a*Game.Instance().ratio);
 		canvas.drawRect(getLeftEdgePoint() + getIndexPosition(columnIndex)
-				+ GameSettings.Instance().marginRect*2, getTopEdgePoint()
+				+ GameSettings.Instance().marginRect, getTopEdgePoint()
 				+ getIndexPosition(rowIndex)
-				+ GameSettings.Instance().marginRect*2, getLeftEdgePoint()
+				+ GameSettings.Instance().marginRect, getLeftEdgePoint()
 				+ getIndexPosition(columnIndex)
-				- GameSettings.Instance().marginRect*2
+				- (GameSettings.Instance().marginRect)
 				+ GameSettings.Instance().getRectSize(), getTopEdgePoint()
 				+ getIndexPosition(rowIndex)
-				- GameSettings.Instance().marginRect*2
+				- (GameSettings.Instance().marginRect)
 				+ GameSettings.Instance().getRectSize(), paint);
+		paint.setAlpha(255);
 	}
 
 	private void drawHorizontalRect(int rowIndex, int columnIndex, Canvas canvas) {
@@ -114,24 +113,29 @@ public class GameView extends View {
 	}
 
 	private void drawInfoPanel(Canvas canvas) {
-		Typeface tf = Typeface.create("Helvetica", Typeface.NORMAL);
-		paint.setTypeface(tf);
+//		Typeface tf = Typeface.create("Helvetica", Typeface.NORMAL);
+//		paint.setTypeface(tf);
 		paint.setColor(getResources().getColor(R.color.color_ivory));
 		paint.setTextSize(60);
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.RIGHT);
 		canvas.drawText(
 				String.format("%d", Game.Instance().score),
-				GameSettings.Instance().width, 70, paint);
+				GameSettings.Instance().width - GameSettings.Instance().getRectSize() + (GameSettings.Instance().getRectSize()/2+15), 70, paint);
 		drawTimeLine(canvas);
 		Bitmap pause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
+		Bitmap start = BitmapFactory.decodeResource(getResources(), R.drawable.start);
 		Bitmap restart = BitmapFactory.decodeResource(getResources(), R.drawable.restart);
-		
+
 		canvas.drawColor(Color.TRANSPARENT);
-		canvas.drawBitmap(pause, 0, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount, null);
-		canvas.drawBitmap(restart, GameSettings.Instance().width - pause.getWidth() * 2, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount, null);
+		if (Game.Instance().gameThread.isPaused)
+			canvas.drawBitmap(start, GameSettings.Instance().getRectSize()/2 - start.getWidth()/2, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount + 16, null);
+		else
+			canvas.drawBitmap(pause, GameSettings.Instance().getRectSize()/2 - pause.getWidth()/2, GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount + 16, null);
+		
+		canvas.drawBitmap(restart, GameSettings.Instance().width - GameSettings.Instance().getRectSize() + (GameSettings.Instance().getRectSize()/2 - restart.getWidth()/2), GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().getRectSize() * GameSettings.Instance().rectsCount + 16, null);
 	}
-	
+
 	private void drawTimeLine(Canvas canvas) {
 		paint.setColor(getResources().getColor(R.color.color_ivory));
 		canvas.drawRect(GameSettings.Instance().marginRect, getTopEdgePoint() - 16, ((getRightEdgePoint() - GameSettings.Instance().marginRect) / 60) * Game.Instance().gameTime, getTopEdgePoint() - GameSettings.Instance().marginRect - 10, paint);

@@ -1,4 +1,7 @@
-package com.example.crossedlines.Views;
+package gtv.andrew.crossedlines.Views;
+
+import gtv.andrew.crossedlines.GameSettings;
+import gtv.andrew.crossedlines.PixelLetterContainer;
 
 import java.util.Random;
 
@@ -9,22 +12,22 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.crossedlines.GameSettings;
-import com.example.crossedlines.PixelLetterContainer;
-import com.example.crossedlines.R;
+import gtv.andrew.crossedlines.R;
 
 public class MenuView extends View {
 
 	Paint paint;
-	
+
 	int rectSize = 20;
-	int letterSize = 10;
+	int bigLetterSize = 10;
+	int smallLetterSize = 5;
 	int marginRect = 2;
-	
-	int letterRect = 0;
-	
+
+	int bigLetterRect = 0;
+	int smallLetterRect = 0;
+
 	int[][] emptyRect;
-	
+
 	public MenuView(Context context) {
 		super(context);
 	}
@@ -32,11 +35,11 @@ public class MenuView extends View {
 	public MenuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-	
+
 	public MenuView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Random random = new Random();
@@ -53,22 +56,27 @@ public class MenuView extends View {
 			}
 		drawGameName(canvas);
 	}
-	
+
 	private void drawGameName(Canvas canvas) {
 		PixelLetterContainer pixelLetterContainer = new PixelLetterContainer();
 		int rightShift = (GameSettings.Instance().width - 450) / 2;
 		for (int[][] letter : pixelLetterContainer.scrollWord) {
-			drawWord(letter, rightShift, 6, canvas);
-			rightShift += (letter[0].length + 1) * 10;
+			drawBigWord(letter, rightShift, 6, canvas);
+			rightShift += (letter[0].length + 1) * bigLetterSize;
 		}
 		rightShift = (GameSettings.Instance().width - 450) / 2 + 80;
 		for (int[][] letter : pixelLetterContainer.lineWord) {
-			drawWord(letter, rightShift, 14, canvas);
-			rightShift += (letter[0].length + 1) * 10;
+			drawBigWord(letter, rightShift, 14, canvas);
+			rightShift += (letter[0].length + 1) * bigLetterSize;
 		}
+//		rightShift = GameSettings.Instance().width/2 - 135/2;
+//		for (int[][] letter : pixelLetterContainer.lineWord) {
+//			drawSmallWord(letter, rightShift, 30, canvas);
+//			rightShift += (letter[0].length + 1) * smallLetterSize;
+//		}
 
 	}
-	
+
 	private void initEmptyRect() {
 		int[][] emptyRect = {{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
 							{2,2,2,2,2,2,2,0,0,2,2,0,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -85,17 +93,27 @@ public class MenuView extends View {
 							{2,2,2,0,2,2,0,0,0,0,2,2,0,0,0,2,2,2,0,2,2,0,0,2}};
 		this.emptyRect = emptyRect;
 	}
-	
-	private void drawWord(int[][] letter, int rightShift, int downShift, Canvas canvas) {
+
+	private void drawBigWord(int[][] letter, int rightShift, int downShift, Canvas canvas) {
 		for (int i = 0; i < letter.length; i ++)
 			for (int j = 0; j < letter[i].length; j ++) {
 				if (letter[i][j] == 0)
 					continue;
 				paint.setColor(Color.WHITE);
-				canvas.drawRect(letterSize * j + rightShift + letterRect, letterSize * i + downShift * 10 + letterRect + 5, letterSize * j + letterSize  + rightShift - letterRect, letterSize * i + letterSize + downShift * 10 - letterRect + 5, paint);
+				canvas.drawRect(bigLetterSize * j + rightShift + bigLetterRect, bigLetterSize * i + downShift * 10 + bigLetterRect + 5, bigLetterSize * j + bigLetterSize  + rightShift - bigLetterRect, bigLetterSize * i + bigLetterSize + downShift * 10 - bigLetterRect + 5, paint);
 			}
 	}
 	
+	private void drawSmallWord(int[][] letter, int rightShift, int downShift, Canvas canvas) {
+		for (int i = 0; i < letter.length; i ++)
+			for (int j = 0; j < letter[i].length; j ++) {
+				if (letter[i][j] == 0)
+					continue;
+				paint.setColor(getResources().getColor(R.color.color_background));
+				canvas.drawRect(smallLetterSize * j + rightShift + smallLetterRect, smallLetterSize * i + downShift * 10 + smallLetterRect + 2, smallLetterSize * j + smallLetterSize  + rightShift - smallLetterRect, smallLetterSize * i + smallLetterSize + downShift * 10 - smallLetterRect + 2, paint);
+			}
+	}
+
 
 
 	private int getColor(int colorNumber) {
@@ -115,5 +133,5 @@ public class MenuView extends View {
 		}
 		return Color.WHITE;
 	}
-	
+
 }

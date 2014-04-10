@@ -1,14 +1,14 @@
-package com.example.crossedlines;
+package gtv.andrew.crossedlines;
+
+import gtv.andrew.crossedlines.Views.GameView;
 
 import java.util.Random;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.crossedlines.Views.GameView;
 
 public class Game {
 
@@ -19,7 +19,7 @@ public class Game {
 
 	public float currentX;
 	public float currentY;
-	
+
 	public float moveX;
 	public float moveY;
 
@@ -35,18 +35,20 @@ public class Game {
 	public boolean touchActionMoveStatus;
 
 	public int score;
-	
+	public int ratio;
+
 	public int gameTime = GameSettings.Instance().time;
 
 	public boolean isGameOver = false;
 
 	public GameView gameView;
 	public GameThread gameThread;
-	
+	public DrawThread drawThread;
+
 	public IGameOverHandler gameOverHandler;
-	
+
 	public SharedPreferences sharedPreferences;
-	
+
 	public static final String highScoreField = "HIGH_SCORE";
 	public int highScore;
 
@@ -63,16 +65,20 @@ public class Game {
 	public void startNewGame() {
 		if (gameThread == null)
 			return;
-		Game.Instance().gameThread.interrupt();
-		Game.Instance().initArray();
-
+//		Game.Instance().load();
 		Game.Instance().score = 0;
+		Game.Instance().gameThread.interrupt();
+		Game.Instance().initArray();	
 		gameTime = GameSettings.Instance().time;
 		Game.Instance().isGameOver = false;
-		
+
 		gameThread = new GameThread(gameView, gameOverHandler);
 		gameThread.start();
-		gameView.postInvalidate();
+		if (Game.Instance().checkCombinedLines()) {
+			Game.Instance().gameThread.isPaused = true;
+			Game.Instance().drawThread = new DrawThread(Game.Instance().gameView);
+			Game.Instance().drawThread.start();
+		}
 	}
 
 	public void initArray() {
@@ -81,7 +87,7 @@ public class Game {
 				gameArr[i][j] = random
 						.nextInt(GameSettings.Instance().colorsCount + 1) + 1;
 	}
-		
+
 	public void setWay() {
 		if ((currentX < (startX - thresHold) && (currentY > (startY - thresHold)) && (currentY < (startY + thresHold)))) {
 			Game.Instance().way = Way.LEFT;
@@ -143,6 +149,30 @@ public class Game {
 		int currentRowIndex = (int) ((event.getY() - GameSettings.Instance().rectVerticalStartPoint) / (GameSettings.Instance().width / GameSettings
 				.Instance().rectsCount));
 		int currentColumnIndex = (int) ((event.getX() - GameSettings.Instance().rectHorizontalStartPoint) / (GameSettings.Instance().width / GameSettings
+				.Instance().rectsCount));
+		if (way == Way.RIGHT) {
+			for (int i = 0; i < (currentColumnIndex - selecetedRect.columnIndex); i++)
+				changeRowRight();
+		}
+		if (way == Way.LEFT) {
+			for (int i = 0; i < (selecetedRect.columnIndex - currentColumnIndex); i++)
+				changeRowLeft();
+		}
+		if (way == Way.UP) {
+			for (int i = 0; i < (selecetedRect.rowIndex - currentRowIndex); i++)
+				changeColumnUp();
+		}
+		if (way == Way.DOWN) {
+			for (int i = 0; i < (currentRowIndex - selecetedRect.rowIndex); i++)
+				changeColumnDown();
+		}
+		selecetedRect.rowIndex++;
+	}
+	
+	public void pickUpArr(float x, float y) {
+		int currentRowIndex = (int) ((y - GameSettings.Instance().rectVerticalStartPoint) / (GameSettings.Instance().width / GameSettings
+				.Instance().rectsCount));
+		int currentColumnIndex = (int) ((x - GameSettings.Instance().rectHorizontalStartPoint) / (GameSettings.Instance().width / GameSettings
 				.Instance().rectsCount));
 		if (way == Way.RIGHT) {
 			for (int i = 0; i < (currentColumnIndex - selecetedRect.columnIndex); i++)
@@ -254,29 +284,15 @@ public class Game {
 					count = 0;
 				}
 			}
-//		if (wasChanged) {
-//
-//			gameThread.isPaused = true;
-////			drawThread = new DrawThread(gameView);
-////			drawThread.start();
-//			gameView.s = true;
-//			gameView.dra();
-//			try {
-//				Thread.sleep(10000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			gameView.s = false;
-//			gameThread.isPaused = false;
-//		}
+		return wasChanged;
+	}
+	public void lowerElements() {
 		for (int i = 0; i < GameSettings.Instance().rectsCount; i ++)
 			for (int j = 0; j < GameSettings.Instance().rectsCount; j ++) 
 				if (gameArr[i][j] < 0)
 					lowerColumn(i, j);
-		return wasChanged;
 	}
-	
+
 	private void lowerColumn(int rowIndex, int columnIndex) {
 		for (int i = rowIndex; i > 0; i--)
 			gameArr[i][columnIndex] = gameArr[i - 1][columnIndex];
@@ -298,7 +314,8 @@ public class Game {
 
 		View view;
 		IGameOverHandler gameOverHandler;
-		boolean isPaused;
+		public boolean isPaused;
+		public boolean isDead;
 
 		public GameThread(View view, IGameOverHandler gameOverHandler) {
 			this.view = view;
@@ -306,8 +323,9 @@ public class Game {
 		}
 
 	    public void run() {
+
     		int count = 0;
-	    	while (!Game.Instance().isGameOver) {
+	    	while (!Game.Instance().isGameOver && !isDead) {
 	    		if (isPaused)
 	    			continue;
 	    		if (Game.Instance().gameTime == 0) {
@@ -329,31 +347,49 @@ public class Game {
 	    }
 
 	}
-	
-//	public static class DrawThread extends Thread {
-//
-//		View view;
-//
-//		public DrawThread(View view) {
-//			this.view = view;
-//		}
-//
-//	    public void run() {
-//    		int count = 0;
-//	    	while (count < 3) {
-//	    		try {
-//					sleep(300);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//	    		count++;
-//		    	view.postInvalidate();
-//	    	}
-//	    }
-//
-//	}
-	
+
+	public static class DrawThread extends Thread {
+
+		View view;
+
+		public DrawThread(View view) {
+			this.view = view;
+		}
+
+	    public void run() {
+    		Game.Instance().ratio  = 0;
+    		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
+        		Game.Instance().gameView.postInvalidate();
+        		try {
+    				sleep(15);
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        		Game.Instance().ratio++;
+    		}
+			Game.Instance().lowerElements();
+    		while (Game.Instance().checkCombinedLines()) {
+    			Game.Instance().ratio = 0;
+        		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
+            		Game.Instance().gameView.postInvalidate();
+            		try {
+        				sleep(15);
+        			} catch (InterruptedException e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			}
+            		Game.Instance().ratio++;
+        		}
+    			Game.Instance().lowerElements();
+    		}
+    		Game.Instance().ratio = 0;
+    		view.postInvalidate();
+    		Game.Instance().gameThread.isPaused = false;
+	    }
+
+	}
+
 	public boolean isOnGameView(MotionEvent event) {
 		return event.getX() > GameSettings.Instance().rectHorizontalStartPoint && event.getX() < GameSettings.Instance().rectHorizontalStartPoint + GameSettings.Instance().width 
 				&& event.getY() > GameSettings.Instance().rectVerticalStartPoint && event.getY() < GameSettings.Instance().rectVerticalStartPoint + GameSettings.Instance().width;
@@ -364,9 +400,9 @@ public class Game {
 	    ed.putInt(highScoreField, score);
 	    ed.commit();
 	}
-	
+
 	public void load() {
 		highScore = sharedPreferences.getInt(highScoreField, 0);
     }
-	
+
 }

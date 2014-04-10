@@ -26,8 +26,8 @@
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:clickable="true"
 	        android:layout_margin="5dp"
-	        android:onClick="startNewGame" />
-	    
+	        android:onClick="onNewGameClick" />
+
 	    <TextView 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -37,8 +37,8 @@
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:clickable="true"
 	        android:layout_margin="5dp"
-	        android:onClick="startMainMenu" />
-	                
+	        android:onClick="onMainMenuClick" />
+
     </LinearLayout>
 
 </RelativeLayout>
