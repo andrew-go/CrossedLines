@@ -27,22 +27,34 @@ public class MenuView extends View {
 	int smallLetterRect = 0;
 
 	int[][] emptyRect;
+	
+	int[][] menuArr;
 
 	public MenuView(Context context) {
 		super(context);
+		initArray();
 	}
 
 	public MenuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		initArray();
 	}
 
 	public MenuView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		initArray();
 	}
 
+	public void initArray() {
+		Random random = new Random();
+		menuArr = new int[GameSettings.Instance().width / rectSize][GameSettings.Instance().height / rectSize];
+		for (int i = 0; i < (GameSettings.Instance().width / rectSize); i++)
+			for (int j = 0; j < (GameSettings.Instance().height / rectSize); j++)
+				menuArr[i][j] = random.nextInt(GameSettings.Instance().colorsCount + 1) + 1;
+	}
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		Random random = new Random();
 		super.onDraw(canvas);
 		paint = new Paint();
 		initEmptyRect();
@@ -51,7 +63,7 @@ public class MenuView extends View {
 			for (int j = 0; j < (GameSettings.Instance().height / rectSize); j++) {
 				if (j < 13 && i >= a && i < 24 + a && emptyRect[j][i - a] == 0)
 					continue;
-				paint.setColor(getColor(random.nextInt(GameSettings.Instance().colorsCount + 1) + 1));
+				paint.setColor(getColor(menuArr[i][j]));
 				canvas.drawRect(rectSize * i + marginRect, rectSize * j + marginRect, rectSize * i + rectSize - marginRect, rectSize * j + rectSize - marginRect, paint);
 			}
 		drawGameName(canvas);

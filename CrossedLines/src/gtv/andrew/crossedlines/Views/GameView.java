@@ -20,7 +20,7 @@ public class GameView extends View {
 	public boolean s = false;
 
 	public GameView(Context context) {
-		super(context);
+		super(context);		
 		initComponents();
 	}	
 

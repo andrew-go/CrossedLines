@@ -31,7 +31,7 @@ public class GameActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		setGameSettings();
+
 		initComponents();
 		if (Game.Instance().checkCombinedLines()) {
 			Game.Instance().gameThread.isPaused = true;
@@ -49,6 +49,13 @@ public class GameActivity extends FragmentActivity {
 		mainMenuDialog.show(getSupportFragmentManager(), "gameOverDialog");
 	}
 
+	@Override
+	protected void onResume() {
+		if (Game.Instance().gameView != null)
+			Game.Instance().gameView.invalidate();
+		super.onResume();
+	}
+	
 	@Override
 	protected void onStop() {
 		super.onStop();

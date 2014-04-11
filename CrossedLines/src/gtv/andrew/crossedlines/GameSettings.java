@@ -1,5 +1,7 @@
 package gtv.andrew.crossedlines;
 
+import android.util.DisplayMetrics;
+
 public class GameSettings {	
 
 	static GameSettings instance;
@@ -25,5 +27,5 @@ public class GameSettings {
 	public int getRectSize() {
 		return 	width/rectsCount;
 	}
-
+	
 }
