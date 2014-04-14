@@ -361,12 +361,12 @@ public class Game {
 		}
 
 	    public void run() {
-//	    	Game.Instance().mediaPlayerDisappear.start();
+	    	Game.Instance().mediaPlayerDisappear.start();
     		Game.Instance().ratio  = 0;
     		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
         		Game.Instance().gameView.postInvalidate();
         		try {
-    				sleep(15);
+    				sleep(10);
     			} catch (InterruptedException e) {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
@@ -375,12 +375,12 @@ public class Game {
     		}
 			Game.Instance().lowerElements();
     		while (Game.Instance().checkCombinedLines()) {
-//    			Game.Instance().mediaPlayerDisappear.start();
+    			Game.Instance().mediaPlayerDisappear.start();
     			Game.Instance().ratio = 0;
         		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
             		Game.Instance().gameView.postInvalidate();
             		try {
-        				sleep(15);
+        				sleep(10);
         			} catch (InterruptedException e) {
         				// TODO Auto-generated catch block
         				e.printStackTrace();

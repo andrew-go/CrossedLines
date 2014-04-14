@@ -74,7 +74,7 @@ public class MenuActivity extends Activity {
 		tvHowToPlay.setLayoutParams(layoutParams3);
 		layoutParams4.setMargins((int) (GameSettings.Instance().width - GameSettings.Instance().width/1.6), 680, 0, 0);
 		tvRateApp.setLayoutParams(layoutParams4);
-		mediaPlayer = MediaPlayer.create(this, R.raw.click2);
+		mediaPlayer = MediaPlayer.create(this, R.raw.click);
 		mediaPlayerNewGame = MediaPlayer.create(this, R.raw.new_game_click);
 	}
 	
