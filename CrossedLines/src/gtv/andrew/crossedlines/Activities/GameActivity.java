@@ -66,7 +66,7 @@ public class GameActivity extends FragmentActivity {
 		initThreads();
 		initDialogs();
 		mediaPlayer = MediaPlayer.create(this, R.raw.click);
-		Game.Instance().mediaPlayerMenu = MediaPlayer.create(this, R.raw.menu);
+		Game.Instance().mediaPlayerMenu = MediaPlayer.create(this, R.raw.dialog_appear);
 		Game.Instance().mediaPlayerDisappear = MediaPlayer.create(this, R.raw.disappear);
 	}
 
