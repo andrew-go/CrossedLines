@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -44,6 +45,9 @@ public class Game {
 	public GameView gameView;
 	public GameThread gameThread;
 	public DrawThread drawThread;
+	
+	public MediaPlayer mediaPlayerDisappear;
+	public MediaPlayer mediaPlayerMenu;
 
 	public IGameOverHandler gameOverHandler;
 
@@ -59,7 +63,7 @@ public class Game {
 	}
 
 	public Game() {
-		initArray();
+		initArray();		
 	}
 
 	public void startNewGame() {
@@ -357,6 +361,7 @@ public class Game {
 		}
 
 	    public void run() {
+//	    	Game.Instance().mediaPlayerDisappear.start();
     		Game.Instance().ratio  = 0;
     		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
         		Game.Instance().gameView.postInvalidate();
@@ -370,6 +375,7 @@ public class Game {
     		}
 			Game.Instance().lowerElements();
     		while (Game.Instance().checkCombinedLines()) {
+//    			Game.Instance().mediaPlayerDisappear.start();
     			Game.Instance().ratio = 0;
         		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
             		Game.Instance().gameView.postInvalidate();

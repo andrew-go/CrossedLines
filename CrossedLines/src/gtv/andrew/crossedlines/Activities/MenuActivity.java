@@ -4,6 +4,7 @@ import gtv.andrew.crossedlines.GameSettings;
 import gtv.andrew.crossedlines.Views.MenuView;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -22,6 +23,8 @@ public class MenuActivity extends Activity {
 	TextView tvSettings;
 	TextView tvHowToPlay;
 	TextView tvRateApp;
+	MediaPlayer mediaPlayer;
+	MediaPlayer mediaPlayerNewGame;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,12 @@ public class MenuActivity extends Activity {
 		tvHowToPlay.setLayoutParams(layoutParams3);
 		layoutParams4.setMargins((int) (GameSettings.Instance().width - GameSettings.Instance().width/1.6), 680, 0, 0);
 		tvRateApp.setLayoutParams(layoutParams4);
-		
+		mediaPlayer = MediaPlayer.create(this, R.raw.click2);
+		mediaPlayerNewGame = MediaPlayer.create(this, R.raw.new_game_click);
 	}
 	
 	public void onNewGameClick(View view) {
-//		Game.Instance().gameThread.isDead = true;
-//		Game.Instance().startNewGame();
+		mediaPlayerNewGame.start();
 		Intent gameActivityIntent = new Intent(getBaseContext(), GameActivity.class);
 		startActivity(gameActivityIntent);
 
@@ -92,6 +95,7 @@ public class MenuActivity extends Activity {
 	
 	
 	public void onRateAppClick(View view) {
+		mediaPlayer.start();
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "gtv.andrew.crossedlines")));
 	}	
 

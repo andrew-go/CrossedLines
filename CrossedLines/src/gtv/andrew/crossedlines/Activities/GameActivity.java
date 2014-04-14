@@ -5,27 +5,27 @@ import gtv.andrew.crossedlines.Game.DrawThread;
 import gtv.andrew.crossedlines.Game.GameThread;
 import gtv.andrew.crossedlines.GameSettings;
 import gtv.andrew.crossedlines.IGameOverHandler;
+import gtv.andrew.crossedlines.R;
 import gtv.andrew.crossedlines.Dialogs.GameOverDialog;
 import gtv.andrew.crossedlines.Dialogs.MainMenuDialog;
 import gtv.andrew.crossedlines.Dialogs.NewGameDialog;
 import gtv.andrew.crossedlines.Views.GameView;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-
-import gtv.andrew.crossedlines.R;
 
 public class GameActivity extends FragmentActivity {
 
 	GameOverDialog gameOverDialog;
 	NewGameDialog newGameDialog;
 	MainMenuDialog mainMenuDialog;
-
+	MediaPlayer mediaPlayer;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +44,6 @@ public class GameActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-//		super.onBackPressed();
 		Game.Instance().gameThread.isPaused = true;
 		mainMenuDialog.show(getSupportFragmentManager(), "gameOverDialog");
 	}
@@ -62,17 +61,13 @@ public class GameActivity extends FragmentActivity {
 		Game.Instance().gameThread.isPaused = true;
 	}
 
-	private void setGameSettings() {
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		GameSettings.Instance().height = displaymetrics.heightPixels;
-		GameSettings.Instance().width = displaymetrics.widthPixels;
-	}
-
 	private void initComponents() {
 		initGameView();
 		initThreads();
 		initDialogs();
+		mediaPlayer = MediaPlayer.create(this, R.raw.click2);
+		Game.Instance().mediaPlayerMenu = MediaPlayer.create(this, R.raw.menu2);
+//		Game.Instance().mediaPlayerDisappear = MediaPlayer.create(this, R.raw.disappear);
 	}
 
 	private void initGameView() {
@@ -109,10 +104,6 @@ public class GameActivity extends FragmentActivity {
 
 			@Override
 			public void onGameOver() {
-//			    Bundle args = new Bundle();
-//			    args.putInt("score", Game.Instance().score);
-//			    gameOverDialog.setArguments(args);
-
 				gameOverDialog.show(getSupportFragmentManager(), "gameOverDialog");
 				if (Game.Instance().score > Game.Instance().highScore) {
 					Game.Instance().save(Game.highScoreField, Game.Instance().score);
@@ -123,10 +114,12 @@ public class GameActivity extends FragmentActivity {
 
 	private boolean actionDown(MotionEvent event) {
 		if (isOnPauseClick(event)) {
+			mediaPlayer.start();
 			Game.Instance().gameThread.isPaused = !Game.Instance().gameThread.isPaused;
 			return false;
 		}
 		if (isOnRestartClick(event)) {
+//			mediaPlayer.start();
 			Game.Instance().gameThread.isPaused = true;
 			newGameDialog.show(getSupportFragmentManager(), "newGameDialog");
 			return false;
@@ -191,6 +184,7 @@ public class GameActivity extends FragmentActivity {
 	}
 
 	public void onYesClick(View view) {
+		mediaPlayer.start();
 		Game.Instance().gameThread.isDead = true;
 		if (newGameDialog.getActivity() != null) {
 			Game.Instance().startNewGame();
@@ -204,6 +198,7 @@ public class GameActivity extends FragmentActivity {
 	}
 	
 	public void onNoClick(View view) {
+		mediaPlayer.start();
 		Game.Instance().gameThread.isPaused = false;
 		if (newGameDialog.getActivity() != null)
 			newGameDialog.dismiss();
@@ -212,6 +207,7 @@ public class GameActivity extends FragmentActivity {
 	}
 	
 	public void onNewGameClick(View view) {
+		mediaPlayer.start();
 		Game.Instance().highScore = Game.Instance().score;
 		Game.Instance().score = 0;	
 		Game.Instance().gameThread.isDead = true;
@@ -220,6 +216,7 @@ public class GameActivity extends FragmentActivity {
 	}
 
 	public void onMainMenuClick(View view) {
+		mediaPlayer.start();
 		Game.Instance().highScore = Game.Instance().score;
 		Game.Instance().score = 0;	
 		Intent menuActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
