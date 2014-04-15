@@ -18,10 +18,10 @@ public class MenuView extends View {
 
 	Paint paint;
 
-	int rectSize = 20;
-	int bigLetterSize = 10;
-	int smallLetterSize = 5;
-	int marginRect = 2;
+	public int rectSize;
+	public int bigLetterSize;
+//	int smallLetterSize = 5;
+	public int marginRect;
 
 	int bigLetterRect = 0;
 	int smallLetterRect = 0;
@@ -32,17 +32,17 @@ public class MenuView extends View {
 
 	public MenuView(Context context) {
 		super(context);
-		initArray();
+//		initArray();
 	}
 
 	public MenuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initArray();
+//		initArray();
 	}
 
 	public MenuView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initArray();
+//		initArray();
 	}
 
 	public void initArray() {
@@ -58,7 +58,7 @@ public class MenuView extends View {
 		super.onDraw(canvas);
 		paint = new Paint();
 		initEmptyRect();
-		int a = (GameSettings.Instance().width - 450) / (2 * 20);
+		int a = (GameSettings.Instance().width - 45 * bigLetterSize) / (2 * rectSize);
 		for (int i = 0; i < (GameSettings.Instance().width / rectSize); i++)
 			for (int j = 0; j < (GameSettings.Instance().height / rectSize); j++) {
 				if (j < 13 && i >= a && i < 24 + a && emptyRect[j][i - a] == 0)
@@ -71,21 +71,18 @@ public class MenuView extends View {
 
 	private void drawGameName(Canvas canvas) {
 		PixelLetterContainer pixelLetterContainer = new PixelLetterContainer();
-		int rightShift = (GameSettings.Instance().width - 450) / 2;
+		int rightShift = (GameSettings.Instance().width - 45 * bigLetterSize) / 2;
+		int downShift = rectSize * 3 + rectSize / 2; 
 		for (int[][] letter : pixelLetterContainer.scrollWord) {
-			drawBigWord(letter, rightShift, 6, canvas);
+			drawBigWord(letter, rightShift, downShift, canvas);
 			rightShift += (letter[0].length + 1) * bigLetterSize;
 		}
-		rightShift = (GameSettings.Instance().width - 450) / 2 + 80;
+		downShift += rectSize / 2 + bigLetterSize * 7;
+		rightShift = (GameSettings.Instance().width - 28 * bigLetterSize) / 2;
 		for (int[][] letter : pixelLetterContainer.lineWord) {
-			drawBigWord(letter, rightShift, 14, canvas);
+			drawBigWord(letter, rightShift, downShift, canvas);
 			rightShift += (letter[0].length + 1) * bigLetterSize;
 		}
-//		rightShift = GameSettings.Instance().width/2 - 135/2;
-//		for (int[][] letter : pixelLetterContainer.lineWord) {
-//			drawSmallWord(letter, rightShift, 30, canvas);
-//			rightShift += (letter[0].length + 1) * smallLetterSize;
-//		}
 
 	}
 
@@ -112,17 +109,7 @@ public class MenuView extends View {
 				if (letter[i][j] == 0)
 					continue;
 				paint.setColor(Color.WHITE);
-				canvas.drawRect(bigLetterSize * j + rightShift + bigLetterRect, bigLetterSize * i + downShift * 10 + bigLetterRect + 5, bigLetterSize * j + bigLetterSize  + rightShift - bigLetterRect, bigLetterSize * i + bigLetterSize + downShift * 10 - bigLetterRect + 5, paint);
-			}
-	}
-	
-	private void drawSmallWord(int[][] letter, int rightShift, int downShift, Canvas canvas) {
-		for (int i = 0; i < letter.length; i ++)
-			for (int j = 0; j < letter[i].length; j ++) {
-				if (letter[i][j] == 0)
-					continue;
-				paint.setColor(getResources().getColor(R.color.color_background));
-				canvas.drawRect(smallLetterSize * j + rightShift + smallLetterRect, smallLetterSize * i + downShift * 10 + smallLetterRect + 2, smallLetterSize * j + smallLetterSize  + rightShift - smallLetterRect, smallLetterSize * i + smallLetterSize + downShift * 10 - smallLetterRect + 2, paint);
+				canvas.drawRect(bigLetterSize * j + rightShift + bigLetterRect, bigLetterSize * i + downShift + bigLetterRect, bigLetterSize * j + bigLetterSize  + rightShift - bigLetterRect, bigLetterSize * i + bigLetterSize + downShift - bigLetterRect, paint);
 			}
 	}
 

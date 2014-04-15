@@ -363,7 +363,7 @@ public class Game {
 	    public void run() {
 	    	Game.Instance().mediaPlayerDisappear.start();
     		Game.Instance().ratio  = 0;
-    		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
+    		while (Game.Instance().ratio < 80/2) {
         		Game.Instance().gameView.postInvalidate();
         		try {
     				sleep(10);
@@ -377,7 +377,7 @@ public class Game {
     		while (Game.Instance().checkCombinedLines()) {
     			Game.Instance().mediaPlayerDisappear.start();
     			Game.Instance().ratio = 0;
-        		while (Game.Instance().ratio < GameSettings.Instance().getRectSize()/2) {
+        		while (Game.Instance().ratio < 80/2) {
             		Game.Instance().gameView.postInvalidate();
             		try {
         				sleep(10);

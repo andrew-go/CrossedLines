@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -61,13 +62,39 @@ public class GameActivity extends FragmentActivity {
 		Game.Instance().gameThread.isPaused = true;
 	}
 
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		// TODO Auto-generated method stub
+//		switch (keyCode) {
+//		case KeyEvent.KEYCODE_VOLUME_UP:
+//			if (GameSettings.Instance().volume < 1) {
+//				GameSettings.Instance().volume = GameSettings.Instance().volume + 0.2;
+//				mediaPlayer.setVolume(0, (float) GameSettings.Instance().volume);
+//				Game.Instance().mediaPlayerMenu.setVolume(0, (float) GameSettings.Instance().volume);
+//				Game.Instance().mediaPlayerDisappear.setVolume(0, (float) GameSettings.Instance().volume);
+//			}
+//			break;
+//		case KeyEvent.KEYCODE_VOLUME_DOWN:
+//			if (GameSettings.Instance().volume > 0) {
+//				GameSettings.Instance().volume = GameSettings.Instance().volume - 0.2;
+//				mediaPlayer.setVolume(0, (float) GameSettings.Instance().volume);
+//				Game.Instance().mediaPlayerMenu.setVolume(0, (float) GameSettings.Instance().volume);
+//				Game.Instance().mediaPlayerDisappear.setVolume(0, (float) GameSettings.Instance().volume);
+//			}
+//			break;
+//		}
+//		
+//		return super.onKeyDown(keyCode, event);
+//	}
+	
 	private void initComponents() {
 		initGameView();
 		initThreads();
 		initDialogs();
-		mediaPlayer = MediaPlayer.create(this, R.raw.click);
+		mediaPlayer = MediaPlayer.create(this, R.raw.click4);
 		Game.Instance().mediaPlayerMenu = MediaPlayer.create(this, R.raw.dialog_appear);
 		Game.Instance().mediaPlayerDisappear = MediaPlayer.create(this, R.raw.disappear);
+		Game.Instance().mediaPlayerDisappear.setVolume(0, (float) 0.8);
 	}
 
 	private void initGameView() {

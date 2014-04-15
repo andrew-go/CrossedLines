@@ -70,8 +70,6 @@ public class GameView extends View {
 	}
 
 	private void drawSmallRect(int rowIndex, int columnIndex, Canvas canvas) {
-//		Color c = new Color();
-//		paint.setColor(c.alpha(Game.Instance().gameArr[rowIndex][columnIndex]));
 		int a = 255 / (GameSettings.Instance().getRectSize()/2);
 		paint.setAlpha(255 - a*Game.Instance().ratio);
 		canvas.drawRect(getLeftEdgePoint() + getIndexPosition(columnIndex)
