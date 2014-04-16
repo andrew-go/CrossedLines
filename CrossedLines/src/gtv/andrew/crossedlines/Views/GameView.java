@@ -114,12 +114,12 @@ public class GameView extends View {
 //		Typeface tf = Typeface.create("Helvetica", Typeface.NORMAL);
 //		paint.setTypeface(tf);
 		paint.setColor(getResources().getColor(R.color.color_ivory));
-		paint.setTextSize(60);
+		paint.setTextSize(GameSettings.Instance().height <= 800 ? 30 : 60);
 		paint.setAntiAlias(true);
 		paint.setTextAlign(Align.RIGHT);
 		canvas.drawText(
 				String.format("%d", Game.Instance().score),
-				GameSettings.Instance().width - GameSettings.Instance().getRectSize() + (GameSettings.Instance().getRectSize()/2+15), 70, paint);
+				GameSettings.Instance().width - GameSettings.Instance().getRectSize() + (GameSettings.Instance().getRectSize()/2+15), GameSettings.Instance().height <= 800 ? 35 : 70, paint);
 		drawTimeLine(canvas);
 		Bitmap pause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
 		Bitmap start = BitmapFactory.decodeResource(getResources(), R.drawable.start);

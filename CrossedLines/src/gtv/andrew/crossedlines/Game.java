@@ -363,7 +363,7 @@ public class Game {
 	    public void run() {
 	    	Game.Instance().mediaPlayerDisappear.start();
     		Game.Instance().ratio  = 0;
-    		while (Game.Instance().ratio < 80/2) {
+    		while (Game.Instance().ratio < 40) {
         		Game.Instance().gameView.postInvalidate();
         		try {
     				sleep(10);
@@ -374,10 +374,16 @@ public class Game {
         		Game.Instance().ratio++;
     		}
 			Game.Instance().lowerElements();
+    		try {
+				sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     		while (Game.Instance().checkCombinedLines()) {
     			Game.Instance().mediaPlayerDisappear.start();
     			Game.Instance().ratio = 0;
-        		while (Game.Instance().ratio < 80/2) {
+        		while (Game.Instance().ratio < 40) {
             		Game.Instance().gameView.postInvalidate();
             		try {
         				sleep(10);
@@ -388,6 +394,12 @@ public class Game {
             		Game.Instance().ratio++;
         		}
     			Game.Instance().lowerElements();
+        		try {
+    				sleep(500);
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
     		}
     		Game.Instance().ratio = 0;
     		view.postInvalidate();

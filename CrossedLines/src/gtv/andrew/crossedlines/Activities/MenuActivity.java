@@ -53,6 +53,7 @@ public class MenuActivity extends Activity {
 			menuView.rectSize = 10;
 			menuView.bigLetterSize = 5;
 			menuView.marginRect = 1;
+			GameSettings.Instance().rectVerticalStartPoint = 50;
 		}
 		else {
 			menuView.rectSize = 20;
@@ -70,10 +71,16 @@ public class MenuActivity extends Activity {
 		int rectsOnButtonArea = (GameSettings.Instance().height / menuView.rectSize - 12) / 4;
 		int rectsOnButton = ((int)rectsOnButtonArea / 3);
 		int rectsOnEmptyArea = ((int) rectsOnButtonArea / 3);
-		if (rectsOnButtonArea % 3 == 1)
-			rectsOnButton++;
-		else if (rectsOnButtonArea % 3 == 2)
-			rectsOnEmptyArea++;
+		if (rectsOnButtonArea > 5) {
+			if (rectsOnButtonArea % 3 == 1)
+				rectsOnButton++;
+			else if (rectsOnButtonArea % 3 == 2)
+				rectsOnEmptyArea++;
+		}
+		else {
+				rectsOnButton = 3;
+				rectsOnEmptyArea = 1;
+		}
 		RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(buttonLenght * menuView.rectSize, menuView.rectSize * rectsOnButton);
 		RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(buttonLenght * menuView.rectSize, menuView.rectSize * rectsOnButton);
 		RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(buttonLenght * menuView.rectSize, menuView.rectSize * rectsOnButton);
